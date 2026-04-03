@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      target: development
+    container_name: betterjob-app
+    ports:
+      - '3000:3000'
+    volumes:
+      # Mount source for hot reloading
+      - .:/app
+      # Prevent host node_modules from overriding container's
+      - /app/node_modules
+      # Persist Next.js build cache
+      - nextjs_cache:/app/.next
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env.local
+    restart: unless-stopped
+
+volumes:
+  nextjs_cache:
