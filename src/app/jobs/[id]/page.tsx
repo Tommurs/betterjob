@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { formatSalary, formatDate } from '@/lib/utils'
 import ApplyButton from '@/components/jobs/ApplyButton'
+import SaveJobButton from '@/components/jobs/SaveJobButton'
 
 const JOB_TYPE_LABELS: Record<string, string> = {
   full_time: 'Full-time',
@@ -32,16 +33,26 @@ export default async function JobDetailPage({ params }: { params: { id: string }
   // Check if logged-in user has already applied
   const { data: { user } } = await supabase.auth.getUser()
   let hasApplied = false
+  let isSaved = false
 
   if (user) {
-    const { data: existing } = await supabase
-      .from('applications')
-      .select('id')
-      .eq('job_id', job.id)
-      .eq('applicant_id', user.id)
-      .single()
+    const [{ data: existing }, { data: savedJob }] = await Promise.all([
+      supabase
+        .from('applications')
+        .select('id')
+        .eq('job_id', job.id)
+        .eq('applicant_id', user.id)
+        .single(),
+      supabase
+        .from('saved_jobs')
+        .select('id')
+        .eq('job_id', job.id)
+        .eq('user_id', user.id)
+        .single(),
+    ])
 
     hasApplied = !!existing
+    isSaved = !!savedJob
   }
 
   return (
@@ -119,6 +130,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
             {/* Apply button */}
             <ApplyButton jobId={job.id} hasApplied={hasApplied} isLoggedIn={!!user} />
+            <SaveJobButton jobId={job.id} isSaved={isSaved} isLoggedIn={!!user} />
           </div>
         </div>
 
