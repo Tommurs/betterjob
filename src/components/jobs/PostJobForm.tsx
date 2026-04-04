@@ -66,6 +66,13 @@ export default function PostJobForm({ companyName }: Props) {
 
     setLoading(true)
 
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      setError('You must be signed in to post a job')
+      setLoading(false)
+      return
+    }
+
     const { data, error } = await supabase
       .from('job_listings')
       .insert({
@@ -78,6 +85,7 @@ export default function PostJobForm({ companyName }: Props) {
         description,
         requirements,
         is_active: true,
+        employer_id: user.id,
       })
       .select('id')
       .single()
