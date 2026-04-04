@@ -1,8 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { formatSalary, formatDate } from '@/lib/utils'
 import ApplyButton from '@/components/jobs/ApplyButton'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
+import EmployerJobActions from '@/components/jobs/EmployerJobActions'
 
 const JOB_TYPE_LABELS: Record<string, string> = {
   full_time: 'Full-time',
@@ -20,22 +22,26 @@ const JOB_TYPE_COLOURS: Record<string, string> = {
 
 export default async function JobDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
+  // Fetch the job — allow inactive listings for the owner
   const { data: job } = await supabase
     .from('job_listings')
     .select('*')
     .eq('id', params.id)
-    .eq('is_active', true)
     .single()
 
   if (!job) notFound()
 
-  // Check if logged-in user has already applied
-  const { data: { user } } = await supabase.auth.getUser()
+  const isOwner = !!user && user.id === job.employer_id
+
+  // If inactive and not the owner, treat as not found
+  if (!job.is_active && !isOwner) notFound()
+
   let hasApplied = false
   let isSaved = false
 
-  if (user) {
+  if (user && !isOwner) {
     const [{ data: existing }, { data: savedJob }] = await Promise.all([
       supabase
         .from('applications')
@@ -50,9 +56,18 @@ export default async function JobDetailPage({ params }: { params: { id: string }
         .eq('user_id', user.id)
         .single(),
     ])
-
     hasApplied = !!existing
     isSaved = !!savedJob
+  }
+
+  // Application count for owners
+  let applicationCount = 0
+  if (isOwner) {
+    const { count } = await supabase
+      .from('applications')
+      .select('*', { count: 'exact', head: true })
+      .eq('job_id', job.id)
+    applicationCount = count ?? 0
   }
 
   return (
@@ -68,6 +83,11 @@ export default async function JobDetailPage({ params }: { params: { id: string }
               <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${JOB_TYPE_COLOURS[job.type]}`}>
                 {JOB_TYPE_LABELS[job.type]}
               </span>
+              {!job.is_active && (
+                <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">
+                  Closed
+                </span>
+              )}
               <span className="text-xs text-gray-400">Posted {formatDate(job.created_at)}</span>
             </div>
             <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
@@ -128,9 +148,32 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
             <hr className="border-gray-100" />
 
-            {/* Apply button */}
-            <ApplyButton jobId={job.id} hasApplied={hasApplied} isLoggedIn={!!user} />
-            <SaveJobButton jobId={job.id} isSaved={isSaved} isLoggedIn={!!user} />
+            {/* Owner actions */}
+            {isOwner ? (
+              <div className="space-y-3">
+                <Link
+                  href={`/jobs/${job.id}/applications`}
+                  className="flex items-center justify-between w-full bg-blue-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <span>View applications</span>
+                  <span className="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {applicationCount}
+                  </span>
+                </Link>
+                <Link
+                  href={`/jobs/${job.id}/edit`}
+                  className="flex items-center justify-center w-full border border-gray-300 text-gray-700 text-sm font-medium py-2.5 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors"
+                >
+                  ✏️ Edit listing
+                </Link>
+                <EmployerJobActions jobId={job.id} isActive={job.is_active} />
+              </div>
+            ) : (
+              <>
+                <ApplyButton jobId={job.id} hasApplied={hasApplied} isLoggedIn={!!user} />
+                <SaveJobButton jobId={job.id} isSaved={isSaved} isLoggedIn={!!user} />
+              </>
+            )}
           </div>
         </div>
 
