@@ -13,7 +13,13 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(git remote:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(ls /c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\\\\\(dashboard\\\\\\)/applications)",
+      "Bash(ls /c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\\\\\(auth\\\\\\)/)"
     ]
   }
 }
