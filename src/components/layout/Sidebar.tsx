@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 const JOBSEEKER_NAV = [
-  { label: 'Browse Jobs',      href: '/dashboard',            icon: '🔍' },
+  { label: 'Browse Jobs',      href: '/jobs',                 icon: '🔍' },
   { label: 'My Applications',  href: '/applications',         icon: '📋' },
   { label: 'Saved Jobs',       href: '/saved',                icon: '🔖' },
   { label: 'Profile',          href: '/profile',              icon: '👤' },
