@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { formatSalary, formatDate } from '@/lib/utils'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
+import SearchBar from '@/components/jobs/SearchBar'
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
   full_time: 'bg-green-50 text-green-700',
@@ -17,15 +18,39 @@ const JOB_TYPE_LABELS: Record<string, string> = {
   remote:    'Remote',
 }
 
-export default async function JobsPage() {
+const TYPE_FILTERS = [
+  { value: '',          label: 'All types' },
+  { value: 'full_time', label: 'Full-time' },
+  { value: 'part_time', label: 'Part-time' },
+  { value: 'contract',  label: 'Contract' },
+  { value: 'remote',    label: 'Remote' },
+]
+
+interface Props {
+  searchParams: { q?: string; location?: string; type?: string }
+}
+
+export default async function JobsPage({ searchParams }: Props) {
   const supabase = createClient()
+  const { q, location, type } = searchParams
+
+  let query = supabase
+    .from('job_listings')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+
+  // Filter by type
+  if (type) query = query.eq('type', type)
+
+  // Filter by keyword (title or company)
+  if (q) query = query.or(`title.ilike.%${q}%,company.ilike.%${q}%,description.ilike.%${q}%`)
+
+  // Filter by location
+  if (location) query = query.ilike('location', `%${location}%`)
 
   const [{ data: jobs }, { data: { user } }] = await Promise.all([
-    supabase
-      .from('job_listings')
-      .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false }),
+    query,
     supabase.auth.getUser(),
   ])
 
@@ -39,17 +64,62 @@ export default async function JobsPage() {
     savedJobIds = new Set(saved?.map(s => s.job_id) ?? [])
   }
 
+  const hasFilters = !!(q || location || type)
+
   return (
-    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">All Jobs</h1>
-        <p className="text-sm text-gray-500 mt-1">{jobs?.length ?? 0} listings available</p>
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+
+      {/* Search bar */}
+      <SearchBar initialQuery={q} initialLocation={location} />
+
+      {/* Type filter pills */}
+      <div className="flex flex-wrap gap-2">
+        {TYPE_FILTERS.map(f => {
+          const params = new URLSearchParams()
+          if (q) params.set('q', q)
+          if (location) params.set('location', location)
+          if (f.value) params.set('type', f.value)
+          const isActive = (type ?? '') === f.value
+          return (
+            <Link
+              key={f.value}
+              href={`/jobs?${params.toString()}`}
+              className={`text-sm px-4 py-1.5 rounded-full border font-medium transition-colors ${
+                isActive
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-600'
+              }`}
+            >
+              {f.label}
+            </Link>
+          )
+        })}
       </div>
 
+      {/* Results header */}
+      <div>
+        <h1 className="text-xl font-bold text-gray-900">
+          {hasFilters ? 'Search results' : 'All Jobs'}
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {jobs?.length ?? 0} listing{jobs?.length !== 1 ? 's' : ''}
+          {q && <span> for <strong>&quot;{q}&quot;</strong></span>}
+          {location && <span> in <strong>{location}</strong></span>}
+        </p>
+      </div>
+
+      {/* No results */}
       {!jobs || jobs.length === 0 ? (
         <div className="text-center py-20 space-y-3">
-          <p className="text-4xl">📭</p>
-          <p className="text-gray-500 text-sm">No jobs posted yet — check back soon!</p>
+          <p className="text-4xl">🔍</p>
+          <p className="text-gray-500 text-sm">
+            {hasFilters ? 'No jobs matched your search.' : 'No jobs posted yet — check back soon!'}
+          </p>
+          {hasFilters && (
+            <Link href="/jobs" className="inline-block text-sm text-blue-600 hover:underline">
+              Clear filters →
+            </Link>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
