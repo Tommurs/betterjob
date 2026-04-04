@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { JobListing } from '@/types'
 import { formatSalary, formatDate } from '@/lib/utils'
+import SaveJobButton from '@/components/jobs/SaveJobButton'
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
   full_time: 'bg-green-50 text-green-700',
@@ -18,9 +19,10 @@ const JOB_TYPE_LABELS: Record<string, string> = {
 
 interface Props {
   jobs: JobListing[]
+  savedJobIds: Set<string>
 }
 
-export default function JobSeekerDashboard({ jobs }: Props) {
+export default function JobSeekerDashboard({ jobs, savedJobIds }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -58,8 +60,14 @@ export default function JobSeekerDashboard({ jobs }: Props) {
               </div>
 
               {/* Right */}
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 <span className="text-xs text-gray-400">{formatDate(job.created_at)}</span>
+                <SaveJobButton
+                  jobId={job.id}
+                  isSaved={savedJobIds.has(job.id)}
+                  isLoggedIn={true}
+                  compact
+                />
                 <Link
                   href={`/jobs/${job.id}`}
                   className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
