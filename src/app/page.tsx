@@ -1,52 +1,61 @@
-import Link from "next/link";
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import { formatSalary, formatDate } from '@/lib/utils'
+import SaveJobButton from '@/components/jobs/SaveJobButton'
 
 const JOB_CATEGORIES = [
-  { label: "Engineering", icon: "💻", count: 142 },
-  { label: "Design", icon: "🎨", count: 58 },
-  { label: "Marketing", icon: "📣", count: 74 },
-  { label: "Sales", icon: "📈", count: 91 },
-  { label: "Finance", icon: "💰", count: 43 },
-  { label: "Operations", icon: "⚙️", count: 37 },
-];
+  { label: 'Engineering', icon: '💻' },
+  { label: 'Design',      icon: '🎨' },
+  { label: 'Marketing',   icon: '📣' },
+  { label: 'Sales',       icon: '📈' },
+  { label: 'Finance',     icon: '💰' },
+  { label: 'Operations',  icon: '⚙️' },
+]
 
-const RECENT_JOBS = [
-  {
-    id: "1",
-    title: "Senior Frontend Engineer",
-    company: "Acme Corp",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$120k – $160k",
-    posted: "2d ago",
-  },
-  {
-    id: "2",
-    title: "Product Designer",
-    company: "Bright Labs",
-    location: "New York, NY",
-    type: "Full-time",
-    salary: "$100k – $130k",
-    posted: "3d ago",
-  },
-  {
-    id: "3",
-    title: "Growth Marketer",
-    company: "Launchpad",
-    location: "Remote",
-    type: "Contract",
-    salary: "$80k – $100k",
-    posted: "5d ago",
-  },
-];
+const JOB_TYPE_COLOURS: Record<string, string> = {
+  full_time: 'bg-green-50 text-green-700',
+  part_time: 'bg-yellow-50 text-yellow-700',
+  contract:  'bg-purple-50 text-purple-700',
+  remote:    'bg-blue-50 text-blue-700',
+}
 
-export default function HomePage() {
+const JOB_TYPE_LABELS: Record<string, string> = {
+  full_time: 'Full-time',
+  part_time: 'Part-time',
+  contract:  'Contract',
+  remote:    'Remote',
+}
+
+export default async function HomePage() {
+  const supabase = createClient()
+
+  const [{ data: jobs }, { data: { user } }] = await Promise.all([
+    supabase
+      .from('job_listings')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(5),
+    supabase.auth.getUser(),
+  ])
+
+  // Fetch saved job IDs for logged-in user
+  let savedJobIds: Set<string> = new Set()
+  if (user) {
+    const { data: saved } = await supabase
+      .from('saved_jobs')
+      .select('job_id')
+      .eq('user_id', user.id)
+    savedJobIds = new Set(saved?.map(s => s.job_id) ?? [])
+  }
+
   return (
     <main>
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-50 to-white py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
-            Find a job that's actually{" "}
+            Find a job that&apos;s actually{' '}
             <span className="text-blue-600">better</span>
           </h1>
           <p className="text-lg text-gray-500 mb-10">
@@ -65,9 +74,12 @@ export default function HomePage() {
               placeholder="Location or Remote"
               className="flex-1 px-4 py-2 text-sm outline-none text-gray-700 placeholder-gray-400 sm:border-l border-gray-200"
             />
-            <button className="bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <Link
+              href="/jobs"
+              className="bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
+            >
               Search
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -76,7 +88,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Browse by category</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {JOB_CATEGORIES.map((cat) => (
+          {JOB_CATEGORIES.map(cat => (
             <Link
               key={cat.label}
               href={`/jobs?category=${cat.label.toLowerCase()}`}
@@ -86,13 +98,12 @@ export default function HomePage() {
               <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600">
                 {cat.label}
               </span>
-              <span className="text-xs text-gray-400">{cat.count} jobs</span>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Recent jobs */}
+      {/* Recent listings */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-800">Recent listings</h2>
@@ -101,38 +112,54 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {RECENT_JOBS.map((job) => (
-            <div
-              key={job.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all"
-            >
-              {/* Left */}
-              <div>
-                <h3 className="font-semibold text-gray-900">{job.title}</h3>
-                <p className="text-sm text-gray-500 mt-0.5">
-                  {job.company} · {job.location}
-                </p>
-              </div>
-
-              {/* Right */}
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <span className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
-                  {job.type}
-                </span>
-                <span className="text-sm font-medium text-gray-700">{job.salary}</span>
-                <span className="text-xs text-gray-400">{job.posted}</span>
-                <Link
-                  href={`/jobs/${job.id}`}
-                  className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Apply
+        {!jobs || jobs.length === 0 ? (
+          <div className="text-center py-16 space-y-3">
+            <p className="text-4xl">📭</p>
+            <p className="text-gray-400 text-sm">No listings yet — check back soon!</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {jobs.map(job => (
+              <div
+                key={job.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all"
+              >
+                {/* Left — clickable */}
+                <Link href={`/jobs/${job.id}`} className="flex-1 group">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {job.title}
+                    </h3>
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${JOB_TYPE_COLOURS[job.type]}`}>
+                      {JOB_TYPE_LABELS[job.type]}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500">{job.company} · {job.location}</p>
+                  <p className="text-sm font-medium text-gray-700 mt-0.5">
+                    {formatSalary(job.salary_min, job.salary_max)}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">{formatDate(job.created_at)}</p>
                 </Link>
+
+                {/* Right */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <SaveJobButton
+                    jobId={job.id}
+                    isSaved={savedJobIds.has(job.id)}
+                    isLoggedIn={!!user}
+                  />
+                  <Link
+                    href={`/jobs/${job.id}`}
+                    className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Apply
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </main>
-  );
+  )
 }
