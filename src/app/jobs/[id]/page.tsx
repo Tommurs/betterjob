@@ -170,7 +170,13 @@ export default async function JobDetailPage({ params }: { params: { id: string }
               </div>
             ) : (
               <>
-                <ApplyButton jobId={job.id} hasApplied={hasApplied} isLoggedIn={!!user} />
+                <ApplyButton
+              jobId={job.id}
+              jobTitle={job.title}
+              company={job.company}
+              hasApplied={hasApplied}
+              isLoggedIn={!!user}
+            />
                 <SaveJobButton jobId={job.id} isSaved={isSaved} isLoggedIn={!!user} />
               </>
             )}
