@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatSalary, formatDate } from '@/lib/utils'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
+import SearchBar from '@/components/jobs/SearchBar'
 
 const JOB_CATEGORIES = [
   { label: 'Engineering', icon: '💻' },
@@ -62,25 +63,7 @@ export default async function HomePage() {
             Thousands of roles at companies that care about their people.
           </p>
 
-          {/* Search bar */}
-          <div className="flex flex-col sm:flex-row gap-3 bg-white border border-gray-200 rounded-xl p-2 shadow-sm max-w-2xl mx-auto">
-            <input
-              type="text"
-              placeholder="Job title, skill, or company"
-              className="flex-1 px-4 py-2 text-sm outline-none text-gray-700 placeholder-gray-400"
-            />
-            <input
-              type="text"
-              placeholder="Location or Remote"
-              className="flex-1 px-4 py-2 text-sm outline-none text-gray-700 placeholder-gray-400 sm:border-l border-gray-200"
-            />
-            <Link
-              href="/jobs"
-              className="bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
-            >
-              Search
-            </Link>
-          </div>
+          <SearchBar />
         </div>
       </section>
 
