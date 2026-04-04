@@ -81,6 +81,7 @@ export default async function JobsPage() {
                   jobId={job.id}
                   isSaved={savedJobIds.has(job.id)}
                   isLoggedIn={!!user}
+                  compact
                 />
                 <Link
                   href={`/jobs/${job.id}`}
