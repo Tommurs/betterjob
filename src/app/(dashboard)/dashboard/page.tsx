@@ -17,16 +17,24 @@ export default async function DashboardPage() {
 
   const role = profile?.role ?? 'jobseeker'
 
-  // --- Job seeker: fetch newest active listings ---
+  // --- Job seeker: fetch newest active listings + saved IDs ---
   if (role === 'jobseeker') {
-    const { data: jobs } = await supabase
-      .from('job_listings')
-      .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(20)
+    const [{ data: jobs }, { data: saved }] = await Promise.all([
+      supabase
+        .from('job_listings')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(20),
+      supabase
+        .from('saved_jobs')
+        .select('job_id')
+        .eq('user_id', user.id),
+    ])
 
-    return <JobSeekerDashboard jobs={jobs ?? []} />
+    const savedJobIds = new Set(saved?.map(s => s.job_id) ?? [])
+
+    return <JobSeekerDashboard jobs={jobs ?? []} savedJobIds={savedJobIds} />
   }
 
   // --- Employer: fetch their jobs with application counts ---
