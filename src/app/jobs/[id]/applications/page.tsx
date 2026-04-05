@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 import StatusUpdater from '@/components/jobs/StatusUpdater'
+import StartConversationButton from '@/components/messages/StartConversationButton'
 
 const STATUS_STYLES: Record<string, string> = {
   pending:     'bg-gray-100 text-gray-600',
@@ -143,8 +144,15 @@ export default async function JobApplicationsPage({ params }: { params: { id: st
                     <span className="text-xs text-gray-400">Applied {formatDate(app.created_at)}</span>
                   </div>
 
-                  {/* Status updater */}
-                  <StatusUpdater applicationId={app.id} currentStatus={app.status} />
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <StartConversationButton
+                      jobId={job.id}
+                      employerId={user.id}
+                      applicantId={profile?.id}
+                    />
+                    <StatusUpdater applicationId={app.id} currentStatus={app.status} />
+                  </div>
                 </div>
               </div>
             )
