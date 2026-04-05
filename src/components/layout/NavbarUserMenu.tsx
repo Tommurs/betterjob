@@ -14,7 +14,7 @@ interface Props {
 const MENU_ITEMS = [
   { label: 'Dashboard',  href: '/dashboard', icon: '🏠' },
   { label: 'Profile',    href: '/profile',   icon: '👤' },
-  { label: 'Messages',   href: '/messages',  icon: '✉️',  badge: 'Soon' },
+  { label: 'Messages',   href: '/messages',  icon: '✉️' },
   { label: 'Settings',   href: '/settings',  icon: '⚙️',  badge: 'Soon' },
 ]
 

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 const JOBSEEKER_NAV = [
   { label: 'Browse Jobs',      href: '/jobs',                 icon: '🔍' },
   { label: 'My Applications',  href: '/applications',         icon: '📋' },
+  { label: 'Messages',         href: '/messages',             icon: '✉️' },
   { label: 'Saved Jobs',       href: '/saved',                icon: '🔖' },
   { label: 'Profile',          href: '/profile',              icon: '👤' },
 ]
@@ -15,6 +16,7 @@ const JOBSEEKER_NAV = [
 const EMPLOYER_NAV = [
   { label: 'Posted Jobs',      href: '/dashboard',            icon: '📌' },
   { label: 'Post a Job',       href: '/jobs/post',            icon: '➕' },
+  { label: 'Messages',         href: '/messages',             icon: '✉️' },
   { label: 'Profile',          href: '/profile',              icon: '🏢' },
 ]
 
