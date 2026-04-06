@@ -18,6 +18,7 @@ const EMPLOYER_NAV = [
   { label: 'Post a Job',       href: '/jobs/post',            icon: '➕' },
   { label: 'Messages',         href: '/messages',             icon: '✉️' },
   { label: 'Profile',          href: '/profile',              icon: '🏢' },
+  { label: 'Recycle Bin',      href: '/recyclebin',           icon: '🗑' },
 ]
 
 interface SidebarProps {

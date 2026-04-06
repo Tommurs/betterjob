@@ -38,6 +38,7 @@ export default async function JobsPage({ searchParams }: Props) {
     .from('job_listings')
     .select('*')
     .eq('is_active', true)
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   // Filter by type

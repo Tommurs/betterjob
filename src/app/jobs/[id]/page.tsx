@@ -35,8 +35,8 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
   const isOwner = !!user && user.id === job.employer_id
 
-  // If inactive and not the owner, treat as not found
-  if (!job.is_active && !isOwner) notFound()
+  // If deleted or inactive and not the owner, treat as not found
+  if (job.deleted_at || (!job.is_active && !isOwner)) notFound()
 
   let hasApplied = false
   let isSaved = false

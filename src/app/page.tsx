@@ -35,6 +35,7 @@ export default async function HomePage() {
       .from('job_listings')
       .select('*')
       .eq('is_active', true)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(5),
     supabase.auth.getUser(),
