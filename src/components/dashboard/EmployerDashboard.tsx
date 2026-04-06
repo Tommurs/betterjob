@@ -1,4 +1,9 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { formatDate } from '@/lib/utils'
 
 interface JobWithApplications {
@@ -22,7 +27,20 @@ const JOB_TYPE_LABELS: Record<string, string> = {
   remote:    'Remote',
 }
 
-export default function EmployerDashboard({ jobs }: Props) {
+export default function EmployerDashboard({ jobs: initialJobs }: Props) {
+  const supabase = createClient()
+  const router = useRouter()
+  const [jobs, setJobs] = useState(initialJobs)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  async function handleDelete(jobId: string) {
+    if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return
+    setDeletingId(jobId)
+    await supabase.from('job_listings').delete().eq('id', jobId)
+    setJobs(prev => prev.filter(j => j.id !== jobId))
+    setDeletingId(null)
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -79,12 +97,27 @@ export default function EmployerDashboard({ jobs }: Props) {
                   <p className="text-2xl font-bold text-blue-600">{job.application_count}</p>
                   <p className="text-xs text-gray-400">applicants</p>
                 </div>
-                <Link
-                  href={`/jobs/${job.id}/applications`}
-                  className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors"
-                >
-                  View
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/jobs/${job.id}/applications`}
+                    className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    href={`/jobs/${job.id}/edit`}
+                    className="text-sm border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(job.id)}
+                    disabled={deletingId === job.id}
+                    className="text-sm border border-red-200 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                  >
+                    {deletingId === job.id ? '...' : 'Delete'}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
