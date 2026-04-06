@@ -23,7 +23,7 @@ export default async function PostJobPage() {
         <h1 className="text-xl font-bold text-gray-900">Post a job</h1>
         <p className="text-sm text-gray-500 mt-1">Fill in the details below to publish your listing</p>
       </div>
-      <PostJobForm companyName={profile.full_name} />
+      <PostJobForm companyName="" />
     </main>
   )
 }
