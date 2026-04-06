@@ -77,13 +77,21 @@ export default function PostJobForm({ companyName }: Props) {
     setError('')
 
     if (!salaryMin || !salaryMax) {
-      setError('Please provide a salary range')
+      setError('Please provide both a minimum and maximum salary.')
       return
     }
 
     if (parseInt(salaryMin) > parseInt(salaryMax)) {
-      setError('Minimum salary cannot be greater than maximum salary')
+      setError('The minimum salary ($' + parseInt(salaryMin).toLocaleString() + ') cannot be greater than the maximum ($' + parseInt(salaryMax).toLocaleString() + '). Please correct the salary range.')
       return
+    }
+
+    if (experienceMin && experienceMax) {
+      const expValues = EXPERIENCE_OPTIONS.filter(o => o.value !== '').map(o => o.value)
+      if (expValues.indexOf(experienceMin) > expValues.indexOf(experienceMax)) {
+        setError(`The minimum experience (${experienceMin}) cannot be greater than the maximum (${experienceMax}). Please correct the experience range.`)
+        return
+      }
     }
 
     if (requirements.length === 0) {
