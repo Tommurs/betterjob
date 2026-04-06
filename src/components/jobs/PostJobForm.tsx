@@ -119,7 +119,7 @@ export default function PostJobForm({ companyName }: Props) {
       {/* Company & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business name *</label>
           <input
             type="text"
             required
