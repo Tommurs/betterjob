@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import JobParser, { type ParsedJob } from '@/components/jobs/JobParser'
 
 const JOB_TYPES = [
   { value: 'full_time',  label: 'Full-time' },
@@ -84,6 +85,19 @@ export default function PostJobForm({ companyName }: Props) {
     requirements.length > 0 &&
     description.length >= 50
 
+  function handleParsed(data: ParsedJob) {
+    if (data.title)          setTitle(data.title)
+    if (data.company)        setCompany(data.company)
+    if (data.location)       setLocation(data.location)
+    if (data.type)           setType(data.type)
+    if (data.salary_min)     setSalaryMin(data.salary_min.toString())
+    if (data.salary_max)     setSalaryMax(data.salary_max.toString())
+    if (data.experience_min) setExperienceMin(data.experience_min)
+    if (data.experience_max) setExperienceMax(data.experience_max)
+    if (data.description)    setDescription(data.description)
+    if (data.requirements?.length) setRequirements(data.requirements)
+  }
+
   function addRequirement() {
     const trimmed = requirementInput.trim()
     if (trimmed && !requirements.includes(trimmed)) {
@@ -153,6 +167,9 @@ export default function PostJobForm({ companyName }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+
+      {/* Parser */}
+      <JobParser onParsed={handleParsed} />
 
       {/* Title */}
       <div>
