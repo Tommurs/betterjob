@@ -14,17 +14,17 @@ const JOB_CATEGORIES = [
 ]
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
-  full_time: 'bg-green-50 text-green-700',
-  part_time: 'bg-yellow-50 text-yellow-700',
-  contract:  'bg-purple-50 text-purple-700',
-  remote:    'bg-blue-50 text-blue-700',
+  full_time:  'bg-green-50 text-green-700',
+  part_time:  'bg-yellow-50 text-yellow-700',
+  contract:   'bg-purple-50 text-purple-700',
+  temporary:  'bg-orange-50 text-orange-700',
 }
 
 const JOB_TYPE_LABELS: Record<string, string> = {
-  full_time: 'Full-time',
-  part_time: 'Part-time',
-  contract:  'Contract',
-  remote:    'Remote',
+  full_time:  'Full-time',
+  part_time:  'Part-time',
+  contract:   'Contract',
+  temporary:  'Temporary',
 }
 
 export default async function HomePage() {
