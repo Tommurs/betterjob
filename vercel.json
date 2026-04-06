@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/purge-deleted-jobs",
+      "schedule": "0 0 * * 0"
+    }
+  ]
+}

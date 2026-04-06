@@ -37,20 +37,24 @@ export default async function DashboardPage() {
     return <JobSeekerDashboard jobs={jobs ?? []} savedJobIds={savedJobIds} />
   }
 
-  // --- Employer: fetch their jobs with application counts ---
+  // --- Employer: fetch their non-deleted jobs with application counts ---
   const { data: jobs } = await supabase
     .from('job_listings')
     .select(`
-      id, title, location, type, is_active, created_at,
+      id, title, location, type, is_active, created_at, deleted_at,
       applications(count)
     `)
     .eq('employer_id', user.id)
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   const jobsWithCounts = (jobs ?? []).map((job: any) => ({
     ...job,
     application_count: job.applications?.[0]?.count ?? 0,
-  })).sort((a: any, b: any) => b.application_count - a.application_count)
+  }))
 
-  return <EmployerDashboard jobs={jobsWithCounts} />
+  const activeJobs   = jobsWithCounts.filter((j: any) =>  j.is_active).sort((a: any, b: any) => b.application_count - a.application_count)
+  const archivedJobs = jobsWithCounts.filter((j: any) => !j.is_active)
+
+  return <EmployerDashboard activeJobs={activeJobs} archivedJobs={archivedJobs} />
 }

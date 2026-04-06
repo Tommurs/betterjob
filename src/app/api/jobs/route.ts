@@ -9,6 +9,7 @@ export async function GET() {
     .from('job_listings')
     .select('*')
     .eq('is_active', true)
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

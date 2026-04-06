@@ -25,9 +25,12 @@ export default function EmployerJobActions({ jobId, isActive }: Props) {
   }
 
   async function deleteJob() {
-    if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return
+    if (!confirm('Move this listing to the recycle bin? It will be permanently deleted after 7 days.')) return
     setLoading(true)
-    await supabase.from('job_listings').delete().eq('id', jobId)
+    await supabase
+      .from('job_listings')
+      .update({ deleted_at: new Date().toISOString(), is_active: false })
+      .eq('id', jobId)
     router.push('/dashboard')
   }
 
