@@ -31,6 +31,8 @@ const EXPERIENCE_OPTIONS = [
   { value: '15+ years', label: '15+ years' },
 ]
 
+const EXP_VALUES = EXPERIENCE_OPTIONS.filter(o => o.value !== '').map(o => o.value)
+
 interface Props {
   companyName: string
 }
@@ -50,8 +52,37 @@ export default function PostJobForm({ companyName }: Props) {
   const [description, setDescription]       = useState('')
   const [requirementInput, setRequirementInput] = useState('')
   const [requirements, setRequirements]     = useState<string[]>([])
-  const [error, setError]                   = useState('')
+  const [submitError, setSubmitError]       = useState('')
   const [loading, setLoading]               = useState(false)
+
+  // --- Inline validation (computed on every render) ---
+  const salaryError = (() => {
+    if (!salaryMin && !salaryMax) return ''
+    if (salaryMin && !salaryMax) return 'Please enter a maximum salary.'
+    if (!salaryMin && salaryMax) return 'Please enter a minimum salary.'
+    if (Number(salaryMin) > Number(salaryMax))
+      return `Minimum ($${Number(salaryMin).toLocaleString()}) cannot exceed maximum ($${Number(salaryMax).toLocaleString()}).`
+    return ''
+  })()
+
+  const expError = (() => {
+    if (!experienceMin || !experienceMax) return ''
+    if (EXP_VALUES.indexOf(experienceMin) > EXP_VALUES.indexOf(experienceMax))
+      return `Minimum (${experienceMin}) cannot exceed maximum (${experienceMax}).`
+    return ''
+  })()
+
+  const canSubmit =
+    !loading &&
+    title.trim() !== '' &&
+    company.trim() !== '' &&
+    location.trim() !== '' &&
+    salaryMin !== '' &&
+    salaryMax !== '' &&
+    !salaryError &&
+    !expError &&
+    requirements.length > 0 &&
+    description.length >= 50
 
   function addRequirement() {
     const trimmed = requirementInput.trim()
@@ -74,41 +105,13 @@ export default function PostJobForm({ companyName }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError('')
-
-    if (!salaryMin || !salaryMax) {
-      setError('Please provide both a minimum and maximum salary.')
-      return
-    }
-
-    if (parseInt(salaryMin) > parseInt(salaryMax)) {
-      setError('The minimum salary ($' + parseInt(salaryMin).toLocaleString() + ') cannot be greater than the maximum ($' + parseInt(salaryMax).toLocaleString() + '). Please correct the salary range.')
-      return
-    }
-
-    if (experienceMin && experienceMax) {
-      const expValues = EXPERIENCE_OPTIONS.filter(o => o.value !== '').map(o => o.value)
-      if (expValues.indexOf(experienceMin) > expValues.indexOf(experienceMax)) {
-        setError(`The minimum experience (${experienceMin}) cannot be greater than the maximum (${experienceMax}). Please correct the experience range.`)
-        return
-      }
-    }
-
-    if (requirements.length === 0) {
-      setError('Please add at least one requirement')
-      return
-    }
-
-    if (description.length < 50) {
-      setError('Description must be at least 50 characters')
-      return
-    }
-
+    if (!canSubmit) return
+    setSubmitError('')
     setLoading(true)
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      setError('You must be signed in to post a job')
+      setSubmitError('You must be signed in to post a job.')
       setLoading(false)
       return
     }
@@ -120,8 +123,8 @@ export default function PostJobForm({ companyName }: Props) {
         company,
         location,
         type,
-        salary_min: parseInt(salaryMin),
-        salary_max: parseInt(salaryMax),
+        salary_min: Number(salaryMin),
+        salary_max: Number(salaryMax),
         experience_min: experienceMin || null,
         experience_max: experienceMax || null,
         description,
@@ -133,7 +136,7 @@ export default function PostJobForm({ companyName }: Props) {
       .single()
 
     if (error) {
-      setError(error.message)
+      setSubmitError(error.message)
       setLoading(false)
       return
     }
@@ -142,18 +145,20 @@ export default function PostJobForm({ companyName }: Props) {
     router.refresh()
   }
 
-  const inputClass = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+  const baseInput = 'w-full px-4 py-2.5 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+  const inputClass = `${baseInput} border-gray-300`
+  const inputErrorClass = `${baseInput} border-red-400 bg-red-50`
   const selectClass = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white'
+  const selectErrorClass = 'w-full px-4 py-2.5 border border-red-400 bg-red-50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
 
       {/* Title */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Job title *</label>
         <input
           type="text"
-          required
           value={title}
           onChange={e => setTitle(e.target.value)}
           placeholder="e.g. Senior Frontend Engineer"
@@ -167,7 +172,6 @@ export default function PostJobForm({ companyName }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-1">Business name *</label>
           <input
             type="text"
-            required
             value={company}
             onChange={e => setCompany(e.target.value)}
             placeholder="e.g. Acme Corp"
@@ -178,7 +182,6 @@ export default function PostJobForm({ companyName }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
           <input
             type="text"
-            required
             value={location}
             onChange={e => setLocation(e.target.value)}
             placeholder="e.g. New York, NY or Remote"
@@ -216,32 +219,34 @@ export default function PostJobForm({ companyName }: Props) {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
             <input
               type="number"
-              required
               min={0}
               value={salaryMin}
               onChange={e => setSalaryMin(e.target.value)}
               placeholder="Min"
-              className="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className={`pl-7 pr-4 py-2.5 ${salaryError ? inputErrorClass : inputClass}`}
             />
           </div>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
             <input
               type="number"
-              required
               min={0}
               value={salaryMax}
               onChange={e => setSalaryMax(e.target.value)}
               placeholder="Max"
-              className="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className={`pl-7 pr-4 py-2.5 ${salaryError ? inputErrorClass : inputClass}`}
             />
           </div>
         </div>
-        <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-          If the compensation for this role varies too widely to list a specific range, post the most
-          representative range you can offer. For roles with significantly different pay tiers,
-          consider posting them as separate listings.
-        </p>
+        {salaryError ? (
+          <p className="text-xs text-red-600 mt-1.5 font-medium">{salaryError}</p>
+        ) : (
+          <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+            If the compensation varies too widely to list a specific range, post the most
+            representative range you can offer. For significantly different pay tiers,
+            consider posting separate listings.
+          </p>
+        )}
       </div>
 
       {/* Years of experience */}
@@ -253,7 +258,7 @@ export default function PostJobForm({ companyName }: Props) {
             <select
               value={experienceMin}
               onChange={e => setExperienceMin(e.target.value)}
-              className={selectClass}
+              className={expError ? selectErrorClass : selectClass}
             >
               {EXPERIENCE_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -265,7 +270,7 @@ export default function PostJobForm({ companyName }: Props) {
             <select
               value={experienceMax}
               onChange={e => setExperienceMax(e.target.value)}
-              className={selectClass}
+              className={expError ? selectErrorClass : selectClass}
             >
               {EXPERIENCE_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -273,20 +278,22 @@ export default function PostJobForm({ companyName }: Props) {
             </select>
           </div>
         </div>
+        {expError && (
+          <p className="text-xs text-red-600 mt-1.5 font-medium">{expError}</p>
+        )}
       </div>
 
       {/* Description */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
         <textarea
-          required
           rows={6}
           value={description}
           onChange={e => setDescription(e.target.value)}
           placeholder="Describe the role, responsibilities, team, and what makes it great..."
           className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
         />
-        <p className={`text-xs mt-1 ${description.length < 50 ? 'text-gray-400' : 'text-green-600'}`}>
+        <p className={`text-xs mt-1 ${description.length === 0 ? 'text-gray-400' : description.length < 50 ? 'text-red-500' : 'text-green-600'}`}>
           {description.length} / 50 characters minimum
         </p>
       </div>
@@ -334,18 +341,18 @@ export default function PostJobForm({ companyName }: Props) {
         )}
       </div>
 
-      {/* Error */}
-      {error && (
+      {/* Submit error */}
+      {submitError && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2">
-          {error}
+          {submitError}
         </p>
       )}
 
       {/* Submit */}
       <button
         type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!canSubmit}
+        className="w-full bg-blue-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {loading ? 'Publishing...' : 'Publish job listing'}
       </button>
