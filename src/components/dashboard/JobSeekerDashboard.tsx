@@ -43,10 +43,10 @@ export default function JobSeekerDashboard({ jobs, savedJobIds }: Props) {
               key={job.id}
               className="bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-sm transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
-              {/* Left */}
-              <div className="space-y-1">
+              {/* Left — fully clickable */}
+              <Link href={`/jobs/${job.id}`} className="flex-1 space-y-1 group min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="font-semibold text-gray-900">{job.title}</h2>
+                  <h2 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{job.title}</h2>
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${JOB_TYPE_COLOURS[job.type]}`}>
                     {JOB_TYPE_LABELS[job.type]}
                   </span>
@@ -57,7 +57,7 @@ export default function JobSeekerDashboard({ jobs, savedJobIds }: Props) {
                 <p className="text-sm font-medium text-gray-700">
                   {formatSalary(job.salary_min, job.salary_max)}
                 </p>
-              </div>
+              </Link>
 
               {/* Right */}
               <div className="flex items-center gap-2 shrink-0">
