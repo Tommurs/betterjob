@@ -5,25 +5,25 @@ import SaveJobButton from '@/components/jobs/SaveJobButton'
 import SearchBar from '@/components/jobs/SearchBar'
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
-  full_time: 'bg-green-50 text-green-700',
-  part_time: 'bg-yellow-50 text-yellow-700',
-  contract:  'bg-purple-50 text-purple-700',
-  remote:    'bg-blue-50 text-blue-700',
+  full_time:  'bg-green-50 text-green-700',
+  part_time:  'bg-yellow-50 text-yellow-700',
+  contract:   'bg-purple-50 text-purple-700',
+  temporary:  'bg-orange-50 text-orange-700',
 }
 
 const JOB_TYPE_LABELS: Record<string, string> = {
-  full_time: 'Full-time',
-  part_time: 'Part-time',
-  contract:  'Contract',
-  remote:    'Remote',
+  full_time:  'Full-time',
+  part_time:  'Part-time',
+  contract:   'Contract',
+  temporary:  'Temporary',
 }
 
 const TYPE_FILTERS = [
-  { value: '',          label: 'All types' },
-  { value: 'full_time', label: 'Full-time' },
-  { value: 'part_time', label: 'Part-time' },
-  { value: 'contract',  label: 'Contract' },
-  { value: 'remote',    label: 'Remote' },
+  { value: '',           label: 'All types' },
+  { value: 'full_time',  label: 'Full-time' },
+  { value: 'part_time',  label: 'Part-time' },
+  { value: 'contract',   label: 'Contract' },
+  { value: 'temporary',  label: 'Temporary' },
 ]
 
 interface Props {

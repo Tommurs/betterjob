@@ -21,10 +21,10 @@ interface Props {
 }
 
 const JOB_TYPE_LABELS: Record<string, string> = {
-  full_time: 'Full-time',
-  part_time: 'Part-time',
-  contract:  'Contract',
-  remote:    'Remote',
+  full_time:  'Full-time',
+  part_time:  'Part-time',
+  contract:   'Contract',
+  temporary:  'Temporary',
 }
 
 export default function EmployerDashboard({ jobs: initialJobs }: Props) {

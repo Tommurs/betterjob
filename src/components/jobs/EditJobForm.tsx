@@ -5,10 +5,30 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 const JOB_TYPES = [
-  { value: 'full_time', label: 'Full-time' },
-  { value: 'part_time', label: 'Part-time' },
-  { value: 'contract',  label: 'Contract' },
-  { value: 'remote',    label: 'Remote' },
+  { value: 'full_time',  label: 'Full-time' },
+  { value: 'part_time',  label: 'Part-time' },
+  { value: 'contract',   label: 'Contract' },
+  { value: 'temporary',  label: 'Temporary' },
+]
+
+const EXPERIENCE_OPTIONS = [
+  { value: '',          label: 'Not specified' },
+  { value: '6 months',  label: '6 months+' },
+  { value: '1 year',    label: '1 year' },
+  { value: '2 years',   label: '2 years' },
+  { value: '3 years',   label: '3 years' },
+  { value: '4 years',   label: '4 years' },
+  { value: '5 years',   label: '5 years' },
+  { value: '6 years',   label: '6 years' },
+  { value: '7 years',   label: '7 years' },
+  { value: '8 years',   label: '8 years' },
+  { value: '9 years',   label: '9 years' },
+  { value: '10 years',  label: '10 years' },
+  { value: '11 years',  label: '11 years' },
+  { value: '12 years',  label: '12 years' },
+  { value: '13 years',  label: '13 years' },
+  { value: '14 years',  label: '14 years' },
+  { value: '15+ years', label: '15+ years' },
 ]
 
 interface Job {
@@ -19,6 +39,8 @@ interface Job {
   type: string
   salary_min?: number | null
   salary_max?: number | null
+  experience_min?: string | null
+  experience_max?: string | null
   description: string
   requirements: string[]
 }
@@ -31,17 +53,19 @@ export default function EditJobForm({ job }: Props) {
   const router = useRouter()
   const supabase = createClient()
 
-  const [title, setTitle] = useState(job.title)
-  const [company, setCompany] = useState(job.company)
-  const [location, setLocation] = useState(job.location)
-  const [type, setType] = useState(job.type)
-  const [salaryMin, setSalaryMin] = useState(job.salary_min?.toString() ?? '')
-  const [salaryMax, setSalaryMax] = useState(job.salary_max?.toString() ?? '')
-  const [description, setDescription] = useState(job.description)
+  const [title, setTitle]                 = useState(job.title)
+  const [company, setCompany]             = useState(job.company)
+  const [location, setLocation]           = useState(job.location)
+  const [type, setType]                   = useState(job.type)
+  const [salaryMin, setSalaryMin]         = useState(job.salary_min?.toString() ?? '')
+  const [salaryMax, setSalaryMax]         = useState(job.salary_max?.toString() ?? '')
+  const [experienceMin, setExperienceMin] = useState(job.experience_min ?? '')
+  const [experienceMax, setExperienceMax] = useState(job.experience_max ?? '')
+  const [description, setDescription]     = useState(job.description)
   const [requirementInput, setRequirementInput] = useState('')
-  const [requirements, setRequirements] = useState<string[]>(job.requirements ?? [])
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [requirements, setRequirements]   = useState<string[]>(job.requirements ?? [])
+  const [error, setError]                 = useState('')
+  const [loading, setLoading]             = useState(false)
 
   function addRequirement() {
     const trimmed = requirementInput.trim()
@@ -66,6 +90,16 @@ export default function EditJobForm({ job }: Props) {
     e.preventDefault()
     setError('')
 
+    if (!salaryMin || !salaryMax) {
+      setError('Please provide a salary range')
+      return
+    }
+
+    if (parseInt(salaryMin) > parseInt(salaryMax)) {
+      setError('Minimum salary cannot be greater than maximum salary')
+      return
+    }
+
     if (requirements.length === 0) {
       setError('Please add at least one requirement')
       return
@@ -85,8 +119,10 @@ export default function EditJobForm({ job }: Props) {
         company,
         location,
         type,
-        salary_min: salaryMin ? parseInt(salaryMin) : null,
-        salary_max: salaryMax ? parseInt(salaryMax) : null,
+        salary_min: parseInt(salaryMin),
+        salary_max: parseInt(salaryMax),
+        experience_min: experienceMin || null,
+        experience_max: experienceMax || null,
         description,
         requirements,
       })
@@ -102,6 +138,9 @@ export default function EditJobForm({ job }: Props) {
     router.refresh()
   }
 
+  const inputClass = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+  const selectClass = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white'
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
 
@@ -113,20 +152,20 @@ export default function EditJobForm({ job }: Props) {
           required
           value={title}
           onChange={e => setTitle(e.target.value)}
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className={inputClass}
         />
       </div>
 
       {/* Company & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business name *</label>
           <input
             type="text"
             required
             value={company}
             onChange={e => setCompany(e.target.value)}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className={inputClass}
           />
         </div>
         <div>
@@ -136,7 +175,7 @@ export default function EditJobForm({ job }: Props) {
             required
             value={location}
             onChange={e => setLocation(e.target.value)}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className={inputClass}
           />
         </div>
       </div>
@@ -164,14 +203,14 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Salary */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Salary range <span className="text-gray-400 font-normal">(optional)</span>
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Salary range *</label>
         <div className="grid grid-cols-2 gap-4">
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
             <input
               type="number"
+              required
+              min={0}
               value={salaryMin}
               onChange={e => setSalaryMin(e.target.value)}
               placeholder="Min"
@@ -182,11 +221,49 @@ export default function EditJobForm({ job }: Props) {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
             <input
               type="number"
+              required
+              min={0}
               value={salaryMax}
               onChange={e => setSalaryMax(e.target.value)}
               placeholder="Max"
               className="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             />
+          </div>
+        </div>
+        <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+          If the compensation for this role varies too widely to list a specific range, post the most
+          representative range you can offer. For roles with significantly different pay tiers,
+          consider posting them as separate listings.
+        </p>
+      </div>
+
+      {/* Years of experience */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Years of experience</label>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Minimum</label>
+            <select
+              value={experienceMin}
+              onChange={e => setExperienceMin(e.target.value)}
+              className={selectClass}
+            >
+              {EXPERIENCE_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Maximum</label>
+            <select
+              value={experienceMax}
+              onChange={e => setExperienceMax(e.target.value)}
+              className={selectClass}
+            >
+              {EXPERIENCE_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

@@ -7,17 +7,17 @@ import SaveJobButton from '@/components/jobs/SaveJobButton'
 import EmployerJobActions from '@/components/jobs/EmployerJobActions'
 
 const JOB_TYPE_LABELS: Record<string, string> = {
-  full_time: 'Full-time',
-  part_time: 'Part-time',
-  contract:  'Contract',
-  remote:    'Remote',
+  full_time:  'Full-time',
+  part_time:  'Part-time',
+  contract:   'Contract',
+  temporary:  'Temporary',
 }
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
-  full_time: 'bg-green-50 text-green-700',
-  part_time: 'bg-yellow-50 text-yellow-700',
-  contract:  'bg-purple-50 text-purple-700',
-  remote:    'bg-blue-50 text-blue-700',
+  full_time:  'bg-green-50 text-green-700',
+  part_time:  'bg-yellow-50 text-yellow-700',
+  contract:   'bg-purple-50 text-purple-700',
+  temporary:  'bg-orange-50 text-orange-700',
 }
 
 export default async function JobDetailPage({ params }: { params: { id: string } }) {
@@ -144,6 +144,16 @@ export default async function JobDetailPage({ params }: { params: { id: string }
                 <span className="text-gray-400">Type</span>
                 <span className="text-gray-800 font-medium">{JOB_TYPE_LABELS[job.type]}</span>
               </div>
+              {(job.experience_min || job.experience_max) && (
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Experience</span>
+                  <span className="text-gray-800 font-medium">
+                    {job.experience_min && job.experience_max
+                      ? `${job.experience_min} – ${job.experience_max}`
+                      : job.experience_min || job.experience_max}
+                  </span>
+                </div>
+              )}
             </div>
 
             <hr className="border-gray-100" />
