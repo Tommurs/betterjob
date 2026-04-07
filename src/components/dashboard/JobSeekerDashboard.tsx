@@ -3,6 +3,11 @@ import { JobListing } from '@/types'
 import { formatSalary, formatDate } from '@/lib/utils'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
 
+const FRESH_GRAD_BADGE: Record<string, { label: string; cls: string }> = {
+  fresh_grad:      { label: 'Fresh Graduate',   cls: 'bg-teal-50 text-teal-700' },
+  fresh_grad_plus: { label: 'Fresh Grad + Exp', cls: 'bg-indigo-50 text-indigo-700' },
+}
+
 const JOB_TYPE_COLOURS: Record<string, string> = {
   full_time:  'bg-green-50 text-green-700',
   part_time:  'bg-yellow-50 text-yellow-700',
@@ -50,6 +55,11 @@ export default function JobSeekerDashboard({ jobs, savedJobIds }: Props) {
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${JOB_TYPE_COLOURS[job.type]}`}>
                     {JOB_TYPE_LABELS[job.type]}
                   </span>
+                  {(job as any).fresh_grad_policy && FRESH_GRAD_BADGE[(job as any).fresh_grad_policy] && (
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${FRESH_GRAD_BADGE[(job as any).fresh_grad_policy].cls}`}>
+                      {FRESH_GRAD_BADGE[(job as any).fresh_grad_policy].label}
+                    </span>
+                  )}
                 </div>
                 <p className="text-sm text-gray-500">
                   {job.company} · {job.location}

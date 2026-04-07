@@ -61,6 +61,7 @@ interface Job {
   required_degree?: string | null
   preferred_degree?: string | null
   preferred_qualifications?: string[]
+  fresh_grad_policy?: string | null
 }
 
 interface Props {
@@ -86,6 +87,9 @@ export default function EditJobForm({ job }: Props) {
   const [preferredDegree, setPreferredDegree]     = useState(job.preferred_degree ?? '')
   const [preferredInput, setPreferredInput]       = useState('')
   const [preferredQuals, setPreferredQuals]       = useState<string[]>(job.preferred_qualifications ?? [])
+  const [freshGradPolicy, setFreshGradPolicy]     = useState<'no' | 'fresh_grad' | 'fresh_grad_plus'>(
+    (job.fresh_grad_policy as 'fresh_grad' | 'fresh_grad_plus') ?? 'no'
+  )
   const [submitError, setSubmitError]             = useState('')
   const [loading, setLoading]                     = useState(false)
 
@@ -100,7 +104,9 @@ export default function EditJobForm({ job }: Props) {
   })()
 
   const expError = (() => {
-    if (!experienceMin || !experienceMax) return ''
+    if (!experienceMin && !experienceMax) return 'Please select a years of experience range.'
+    if (experienceMin && !experienceMax) return 'Please select a maximum years of experience.'
+    if (!experienceMin && experienceMax) return 'Please select a minimum years of experience.'
     if (EXP_VALUES.indexOf(experienceMin) > EXP_VALUES.indexOf(experienceMax))
       return `Minimum (${experienceMin}) cannot exceed maximum (${experienceMax}).`
     return ''
@@ -114,6 +120,8 @@ export default function EditJobForm({ job }: Props) {
     salaryMin !== '' &&
     salaryMax !== '' &&
     !salaryError &&
+    experienceMin !== '' &&
+    experienceMax !== '' &&
     !expError &&
     requirements.length > 0 &&
     description.length >= 50
@@ -170,6 +178,7 @@ export default function EditJobForm({ job }: Props) {
         required_degree: requiredDegree || null,
         preferred_degree: preferredDegree || null,
         preferred_qualifications: preferredQuals,
+        fresh_grad_policy: freshGradPolicy === 'no' ? null : freshGradPolicy,
       })
       .eq('id', job.id)
 
@@ -292,7 +301,7 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Years of experience */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Years of experience</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Years of experience *</label>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Minimum</label>
@@ -310,6 +319,36 @@ export default function EditJobForm({ job }: Props) {
           </div>
         </div>
         {expError && <p className="text-xs text-red-600 mt-1.5 font-medium">{expError}</p>}
+      </div>
+
+      {/* Fresh graduate policy */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Open to fresh graduates?</label>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { value: 'no',              label: 'No' },
+            { value: 'fresh_grad',      label: 'Fresh Graduate' },
+            { value: 'fresh_grad_plus', label: 'Fresh Grad + Experience' },
+          ] as const).map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setFreshGradPolicy(opt.value)}
+              className={`py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
+                freshGradPolicy === opt.value
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-white text-gray-600 border-gray-300 hover:border-teal-400'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-gray-400 mt-1.5">
+          {freshGradPolicy === 'fresh_grad'      && 'Listing will show a "Fresh Graduate" tag — no prior experience needed.'}
+          {freshGradPolicy === 'fresh_grad_plus' && 'Listing will show a "Fresh Grad + Experience" tag — open to fresh grads with some relevant background.'}
+          {freshGradPolicy === 'no'              && 'No fresh graduate tag will be shown on the listing.'}
+        </p>
       </div>
 
       {/* Description */}

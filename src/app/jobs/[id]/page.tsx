@@ -6,6 +6,11 @@ import ApplyButton from '@/components/jobs/ApplyButton'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
 import EmployerJobActions from '@/components/jobs/EmployerJobActions'
 
+const FRESH_GRAD_BADGE: Record<string, { label: string; cls: string }> = {
+  fresh_grad:      { label: 'Fresh Graduate',          cls: 'bg-teal-50 text-teal-700' },
+  fresh_grad_plus: { label: 'Fresh Grad + Experience', cls: 'bg-indigo-50 text-indigo-700' },
+}
+
 const DEGREE_LABELS: Record<string, string> = {
   none:         'No formal education required',
   high_school:  'High School Diploma / GED',
@@ -94,6 +99,11 @@ export default async function JobDetailPage({ params }: { params: { id: string }
               <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${JOB_TYPE_COLOURS[job.type]}`}>
                 {JOB_TYPE_LABELS[job.type]}
               </span>
+              {job.fresh_grad_policy && FRESH_GRAD_BADGE[job.fresh_grad_policy] && (
+                <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${FRESH_GRAD_BADGE[job.fresh_grad_policy].cls}`}>
+                  {FRESH_GRAD_BADGE[job.fresh_grad_policy].label}
+                </span>
+              )}
               {!job.is_active && (
                 <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">
                   Closed
