@@ -6,6 +6,17 @@ import ApplyButton from '@/components/jobs/ApplyButton'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
 import EmployerJobActions from '@/components/jobs/EmployerJobActions'
 
+const DEGREE_LABELS: Record<string, string> = {
+  none:         'No formal education required',
+  high_school:  'High School Diploma / GED',
+  trade:        'Trade / Vocational Certificate',
+  associate:    "Associate's Degree",
+  bachelor:     "Bachelor's Degree",
+  master:       "Master's Degree",
+  doctorate:    'Doctorate / PhD',
+  professional: 'Professional Degree (JD, MD, etc.)',
+}
+
 const JOB_TYPE_LABELS: Record<string, string> = {
   full_time:  'Full-time',
   part_time:  'Part-time',
@@ -102,18 +113,47 @@ export default async function JobDetailPage({ params }: { params: { id: string }
             </p>
           </div>
 
-          {/* Requirements */}
-          {job.requirements?.length > 0 && (
+          {/* Required qualifications */}
+          {(job.required_degree || job.requirements?.length > 0) && (
             <div>
-              <h2 className="text-base font-semibold text-gray-900 mb-3">Requirements</h2>
-              <ul className="space-y-2">
-                {job.requirements.map((req: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="text-blue-500 mt-0.5">✓</span>
-                    {req}
-                  </li>
-                ))}
-              </ul>
+              <h2 className="text-base font-semibold text-gray-900 mb-3">Required qualifications</h2>
+              {job.required_degree && (
+                <p className="text-sm text-gray-600 mb-2">
+                  <span className="font-medium text-gray-700">Education: </span>
+                  {DEGREE_LABELS[job.required_degree] ?? job.required_degree}
+                </p>
+              )}
+              {job.requirements?.length > 0 && (
+                <ul className="space-y-2">
+                  {job.requirements.map((req: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="text-blue-500 mt-0.5">✓</span>{req}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* Preferred qualifications */}
+          {(job.preferred_degree || job.preferred_qualifications?.length > 0) && (
+            <div>
+              <h2 className="text-base font-semibold text-gray-900 mb-3">Preferred qualifications</h2>
+              {job.preferred_degree && (
+                <p className="text-sm text-gray-600 mb-2">
+                  <span className="font-medium text-gray-700">Education: </span>
+                  {DEGREE_LABELS[job.preferred_degree] ?? job.preferred_degree}
+                </p>
+              )}
+              {job.preferred_qualifications?.length > 0 && (
+                <ul className="space-y-2">
+                  {job.preferred_qualifications.map((q: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="text-green-500 mt-0.5">◎</span>{q}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
         </div>
