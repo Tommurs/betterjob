@@ -20,8 +20,8 @@ export default async function PostJobPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-gray-900">Post a job</h1>
-        <p className="text-sm text-gray-500 mt-1">Fill in the details below to publish your listing</p>
+        <h1 className="heading-display text-xl font-bold text-[#1c1612]">Post a job</h1>
+        <p className="text-sm text-[#78716c] mt-1">Fill in the details below to publish your listing</p>
       </div>
       <PostJobForm companyName="" />
     </main>

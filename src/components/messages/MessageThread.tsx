@@ -68,7 +68,7 @@ export default function MessageThread({ conversationId, messages: initial, curre
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {messages.length === 0 && (
-          <p className="text-center text-sm text-gray-400 py-10">
+          <p className="text-center text-sm text-[#a8a29e] py-10">
             No messages yet — say hello!
           </p>
         )}
@@ -76,15 +76,15 @@ export default function MessageThread({ conversationId, messages: initial, curre
           const isMe = msg.sender_id === currentUserId
           return (
             <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[75%] space-y-1`}>
+              <div className="max-w-[75%] space-y-1">
                 <div className={`px-4 py-2.5 rounded-2xl text-sm ${
                   isMe
-                    ? 'bg-blue-600 text-white rounded-br-sm'
-                    : 'bg-gray-100 text-gray-900 rounded-bl-sm'
+                    ? 'bg-[#0f2d1f] text-[#faf6ef] rounded-br-sm'
+                    : 'bg-[#f2ebe0] text-[#1c1612] rounded-bl-sm'
                 }`}>
                   {msg.content}
                 </div>
-                <p className={`text-xs text-gray-400 ${isMe ? 'text-right' : 'text-left'}`}>
+                <p className={`text-xs text-[#a8a29e] ${isMe ? 'text-right' : 'text-left'}`}>
                   {formatDate(msg.created_at)}
                 </p>
               </div>
@@ -95,19 +95,19 @@ export default function MessageThread({ conversationId, messages: initial, curre
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSend} className="flex gap-3 pt-4 border-t border-gray-100">
+      <form onSubmit={handleSend} className="flex gap-3 pt-4 border-t border-[#e5d8c8]">
         <input
           type="text"
           value={newMessage}
           onChange={e => setNewMessage(e.target.value)}
           placeholder="Write a message..."
           disabled={sending}
-          className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input flex-1"
         />
         <button
           type="submit"
           disabled={sending || !newMessage.trim()}
-          className="bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary px-5 py-2.5"
         >
           Send
         </button>

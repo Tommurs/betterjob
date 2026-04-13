@@ -34,11 +34,11 @@ export default function ResetPasswordForm() {
     return (
       <div className="text-center space-y-3 py-4">
         <div className="text-4xl">📬</div>
-        <h2 className="text-lg font-semibold text-gray-900">Check your email</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="heading-display text-lg font-semibold text-[#1c1612]">Check your email</h2>
+        <p className="text-sm text-[#78716c]">
           We sent a reset link to <strong>{email}</strong>. Click it to choose a new password.
         </p>
-        <Link href="/login" className="inline-block text-sm text-blue-600 hover:underline mt-2">
+        <Link href="/login" className="inline-block text-sm text-[#0f2d1f] font-semibold hover:text-[#1a4a32] transition-colors mt-2">
           Back to sign in
         </Link>
       </div>
@@ -48,7 +48,7 @@ export default function ResetPasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-[#1c1612] mb-1">
           Email address
         </label>
         <input
@@ -58,7 +58,7 @@ export default function ResetPasswordForm() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
@@ -71,14 +71,14 @@ export default function ResetPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-primary w-full py-2.5"
       >
         {loading ? 'Sending...' : 'Send reset link'}
       </button>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-sm text-[#78716c]">
         Remembered it?{' '}
-        <Link href="/login" className="text-blue-600 hover:underline font-medium">
+        <Link href="/login" className="text-[#0f2d1f] hover:text-[#1a4a32] font-semibold transition-colors">
           Sign in
         </Link>
       </p>

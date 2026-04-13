@@ -55,10 +55,10 @@ export default function SaveJobButton({ jobId, isSaved, isLoggedIn, compact = fa
         onClick={handleToggle}
         disabled={loading}
         title={saved ? 'Unsave job' : 'Save job'}
-        className={`flex items-center justify-center w-9 h-9 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+        className={`flex items-center justify-center w-9 h-9 rounded-xl border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
           saved
-            ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-red-50 hover:text-red-400 hover:border-red-200'
-            : 'bg-white text-gray-400 border-gray-300 hover:text-blue-600 hover:border-blue-400'
+            ? 'bg-[#d1fae5] text-[#065f46] border-[#a7f3d0] hover:bg-red-50 hover:text-red-400 hover:border-red-200'
+            : 'bg-[#fffefb] text-[#a8a29e] border-[#e5d8c8] hover:text-[#0f2d1f] hover:border-[#cfc0ad]'
         }`}
       >
         {loading ? '·' : '🔖'}
@@ -71,10 +71,10 @@ export default function SaveJobButton({ jobId, isSaved, isLoggedIn, compact = fa
     <button
       onClick={handleToggle}
       disabled={loading}
-      className={`w-full flex items-center justify-center gap-2 text-sm font-medium py-2.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+      className={`w-full flex items-center justify-center gap-2 text-sm font-medium py-2.5 rounded-xl border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
         saved
-          ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-red-50 hover:text-red-500 hover:border-red-200'
-          : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-600'
+          ? 'bg-[#d1fae5] text-[#065f46] border-[#a7f3d0] hover:bg-red-50 hover:text-red-500 hover:border-red-200'
+          : 'bg-[#fffefb] text-[#78716c] border-[#e5d8c8] hover:border-[#cfc0ad] hover:text-[#1c1612]'
       }`}
     >
       🔖 {loading ? 'Saving...' : saved ? 'Saved' : 'Save job'}

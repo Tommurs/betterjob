@@ -43,7 +43,7 @@ export default function UpdatePasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-[#1c1612] mb-1">
           New password
         </label>
         <input
@@ -53,12 +53,12 @@ export default function UpdatePasswordForm() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           placeholder="Min. 8 characters"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#1c1612] mb-1">
           Confirm new password
         </label>
         <input
@@ -68,7 +68,7 @@ export default function UpdatePasswordForm() {
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="••••••••"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
@@ -81,7 +81,7 @@ export default function UpdatePasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-primary w-full py-2.5"
       >
         {loading ? 'Updating...' : 'Update password'}
       </button>

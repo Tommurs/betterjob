@@ -88,12 +88,12 @@ export default function NotificationsForm({ userId, role, initial }: Notificatio
   ]
 
   return (
-    <div className="divide-y divide-slate-100">
+    <div className="divide-y divide-[#e5d8c8]">
       {rows.map(row => (
         <div key={row.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
           <div className="pr-4">
-            <p className="text-sm font-medium text-slate-800">{row.label}</p>
-            <p className="text-xs text-slate-400 mt-0.5">{row.desc}</p>
+            <p className="text-sm font-medium text-[#1c1612]">{row.label}</p>
+            <p className="text-xs text-[#a8a29e] mt-0.5">{row.desc}</p>
           </div>
           <div className="flex items-center gap-2.5 shrink-0">
             {savedKey === row.key && (

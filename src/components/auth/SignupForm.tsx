@@ -57,11 +57,11 @@ export default function SignupForm() {
     return (
       <div className="text-center space-y-3 py-4">
         <div className="text-4xl">📬</div>
-        <h2 className="text-lg font-semibold text-gray-900">Check your email</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="heading-display text-lg font-semibold text-[#1c1612]">Check your email</h2>
+        <p className="text-sm text-[#78716c]">
           We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
         </p>
-        <Link href="/login" className="inline-block text-sm text-blue-600 hover:underline mt-2">
+        <Link href="/login" className="inline-block text-sm text-[#0f2d1f] font-semibold hover:text-[#1a4a32] transition-colors mt-2">
           Back to sign in
         </Link>
       </div>
@@ -80,8 +80,8 @@ export default function SignupForm() {
             onClick={() => setRole(r)}
             className={`py-2.5 rounded-lg border text-sm font-medium transition-colors ${
               role === r
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
+                ? 'bg-[#0f2d1f] text-[#faf6ef] border-[#0f2d1f]'
+                : 'bg-[#fffefb] text-[#78716c] border-[#e5d8c8] hover:border-[#cfc0ad]'
             }`}
           >
             {r === 'jobseeker' ? '👤 Job Seeker' : '🏢 Employer'}
@@ -91,7 +91,7 @@ export default function SignupForm() {
 
       {/* Full name */}
       <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="fullName" className="block text-sm font-medium text-[#1c1612] mb-1">
           Full name
         </label>
         <input
@@ -101,13 +101,13 @@ export default function SignupForm() {
           value={fullName}
           onChange={e => setFullName(e.target.value)}
           placeholder="Jane Smith"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-[#1c1612] mb-1">
           Email address
         </label>
         <input
@@ -117,13 +117,13 @@ export default function SignupForm() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
       {/* Password */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-[#1c1612] mb-1">
           Password
         </label>
         <input
@@ -133,13 +133,13 @@ export default function SignupForm() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           placeholder="Min. 8 characters"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
       {/* Confirm password */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#1c1612] mb-1">
           Confirm password
         </label>
         <input
@@ -149,7 +149,7 @@ export default function SignupForm() {
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="••••••••"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input"
         />
       </div>
 
@@ -164,15 +164,15 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-primary w-full py-2.5"
       >
         {loading ? 'Creating account...' : 'Create account'}
       </button>
 
       {/* Footer */}
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-sm text-[#78716c]">
         Already have an account?{' '}
-        <Link href="/login" className="text-blue-600 hover:underline font-medium">
+        <Link href="/login" className="text-[#0f2d1f] hover:text-[#1a4a32] font-semibold transition-colors">
           Sign in
         </Link>
       </p>

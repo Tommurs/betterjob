@@ -51,7 +51,7 @@ export default function PrivacyForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-[#1c1612] mb-1.5">
           Profile visibility
         </label>
         <select
@@ -63,7 +63,7 @@ export default function PrivacyForm({
           <option value="employers_only">Employers only — hidden from other job seekers</option>
           <option value="private">Private — only visible to you</option>
         </select>
-        <p className="text-xs text-slate-400 mt-1.5">
+        <p className="text-xs text-[#a8a29e] mt-1.5">
           Controls who can view your full profile page.
         </p>
       </div>
@@ -71,7 +71,7 @@ export default function PrivacyForm({
       {isJobseeker && (
         <>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-[#1c1612] mb-1.5">
               Job search status
             </label>
             <select
@@ -83,15 +83,15 @@ export default function PrivacyForm({
               <option value="open">Open to opportunities</option>
               <option value="not_looking">Not looking right now</option>
             </select>
-            <p className="text-xs text-slate-400 mt-1.5">
+            <p className="text-xs text-[#a8a29e] mt-1.5">
               Lets employers know how actively you are searching.
             </p>
           </div>
 
           <div className="flex items-start justify-between gap-4 py-0.5">
             <div>
-              <p className="text-sm font-medium text-slate-800">Open to Work</p>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-sm font-medium text-[#1c1612]">Open to Work</p>
+              <p className="text-xs text-[#a8a29e] mt-0.5">
                 Show a visible badge on your profile that you are open to new roles.
               </p>
             </div>
@@ -100,8 +100,8 @@ export default function PrivacyForm({
 
           <div className="flex items-start justify-between gap-4 py-0.5">
             <div>
-              <p className="text-sm font-medium text-slate-800">Invite to Apply</p>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-sm font-medium text-[#1c1612]">Invite to Apply</p>
+              <p className="text-xs text-[#a8a29e] mt-0.5">
                 Allow employers to proactively invite you to apply for their open roles.
               </p>
             </div>

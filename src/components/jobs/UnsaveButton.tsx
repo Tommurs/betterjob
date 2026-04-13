@@ -23,7 +23,7 @@ export default function UnsaveButton({ savedId }: Props) {
     <button
       onClick={handleUnsave}
       disabled={loading}
-      className="text-sm border border-gray-300 text-gray-500 px-4 py-2 rounded-lg hover:border-red-300 hover:text-red-500 transition-colors disabled:opacity-50"
+      className="text-sm border border-[#e5d8c8] text-[#78716c] px-4 py-2 rounded-xl hover:border-red-300 hover:text-red-500 transition-colors disabled:opacity-50"
     >
       {loading ? '...' : '🔖 Unsave'}
     </button>

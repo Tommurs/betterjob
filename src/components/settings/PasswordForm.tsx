@@ -34,7 +34,7 @@ export default function PasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-[#1c1612] mb-1.5">
           New password
         </label>
         <input
@@ -48,7 +48,7 @@ export default function PasswordForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-[#1c1612] mb-1.5">
           Confirm new password
         </label>
         <input

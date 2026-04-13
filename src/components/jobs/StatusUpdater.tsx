@@ -43,13 +43,13 @@ export default function StatusUpdater({ applicationId, currentStatus }: Props) {
         value={status}
         onChange={e => handleChange(e.target.value)}
         disabled={loading}
-        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:opacity-50"
+        className="input text-sm px-3 py-1.5 disabled:opacity-50"
       >
         {STATUSES.map(s => (
           <option key={s.value} value={s.value}>{s.label}</option>
         ))}
       </select>
-      {saved && <span className="text-xs text-green-600">✓ Saved</span>}
+      {saved && <span className="text-xs text-emerald-700 font-medium">✓ Saved</span>}
     </div>
   )
 }

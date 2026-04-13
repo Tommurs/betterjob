@@ -192,9 +192,9 @@ export default function EditJobForm({ job }: Props) {
     router.refresh()
   }
 
-  const inputClass    = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+  const inputClass    = 'input'
   const inputErrClass = 'w-full px-4 py-2.5 border border-red-400 bg-red-50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
-  const selectClass   = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white'
+  const selectClass   = 'input bg-white'
   const selectErrClass= 'w-full px-4 py-2.5 border border-red-400 bg-red-50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition'
 
   function QualList({
@@ -213,23 +213,23 @@ export default function EditJobForm({ job }: Props) {
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown(onAdd)}
             placeholder={placeholder}
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="flex-1 px-4 py-2.5 border border-[#e5d8c8] rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
           />
           <button type="button" onClick={onAdd}
-            className="px-4 py-2.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
+            className="px-4 py-2.5 bg-gray-100 text-[#1c1612] text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
             Add
           </button>
         </div>
-        <p className="text-xs text-gray-400 mt-1">Press Enter or click Add after each item</p>
+        <p className="text-xs text-[#a8a29e] mt-1">Press Enter or click Add after each item</p>
         {items.length > 0 && (
           <ul className="mt-3 space-y-2">
             {items.map(item => (
-              <li key={item} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-700">
+              <li key={item} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-sm text-[#1c1612]">
                 <span className="flex items-center gap-2">
                   <span className="text-blue-500">✓</span>{item}
                 </span>
                 <button type="button" onClick={() => onRemove(item)}
-                  className="text-gray-400 hover:text-red-500 transition-colors text-base leading-none">×</button>
+                  className="text-[#a8a29e] hover:text-red-500 transition-colors text-base leading-none">×</button>
               </li>
             ))}
           </ul>
@@ -243,30 +243,30 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Title */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Job title *</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-1">Job title *</label>
         <input type="text" value={title} onChange={e => setTitle(e.target.value)} className={inputClass} />
       </div>
 
       {/* Company & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Business name *</label>
+          <label className="block text-sm font-medium text-[#1c1612] mb-1">Business name *</label>
           <input type="text" value={company} onChange={e => setCompany(e.target.value)} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
+          <label className="block text-sm font-medium text-[#1c1612] mb-1">Location *</label>
           <input type="text" value={location} onChange={e => setLocation(e.target.value)} className={inputClass} />
         </div>
       </div>
 
       {/* Job type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Job type *</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-2">Job type *</label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {JOB_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => setType(t.value)}
               className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                type === t.value ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
+                type === t.value ? 'bg-[#0f2d1f] text-white border-blue-600' : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-blue-400'
               }`}>
               {t.label}
             </button>
@@ -276,15 +276,15 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Salary */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Salary range *</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-1">Salary range *</label>
         <div className="grid grid-cols-2 gap-4">
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a29e] text-sm">$</span>
             <input type="number" min={0} value={salaryMin} onChange={e => setSalaryMin(e.target.value)}
               placeholder="Min" className={`pl-7 pr-4 py-2.5 ${salaryError ? inputErrClass : inputClass}`} />
           </div>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a29e] text-sm">$</span>
             <input type="number" min={0} value={salaryMax} onChange={e => setSalaryMax(e.target.value)}
               placeholder="Max" className={`pl-7 pr-4 py-2.5 ${salaryError ? inputErrClass : inputClass}`} />
           </div>
@@ -292,7 +292,7 @@ export default function EditJobForm({ job }: Props) {
         {salaryError ? (
           <p className="text-xs text-red-600 mt-1.5 font-medium">{salaryError}</p>
         ) : (
-          <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+          <p className="text-xs text-[#a8a29e] mt-2 leading-relaxed">
             If the compensation varies too widely to list a specific range, post the most representative
             range you can offer. For significantly different pay tiers, consider posting separate listings.
           </p>
@@ -301,17 +301,17 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Years of experience */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Years of experience *</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-2">Years of experience *</label>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Minimum</label>
+            <label className="block text-xs text-[#78716c] mb-1">Minimum</label>
             <select value={experienceMin} onChange={e => setExperienceMin(e.target.value)}
               className={expError ? selectErrClass : selectClass}>
               {EXPERIENCE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Maximum</label>
+            <label className="block text-xs text-[#78716c] mb-1">Maximum</label>
             <select value={experienceMax} onChange={e => setExperienceMax(e.target.value)}
               className={expError ? selectErrClass : selectClass}>
               {EXPERIENCE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -323,7 +323,7 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Fresh graduate policy */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Open to fresh graduates?</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-2">Open to fresh graduates?</label>
         <div className="grid grid-cols-3 gap-2">
           {([
             { value: 'no',              label: 'No' },
@@ -337,14 +337,14 @@ export default function EditJobForm({ job }: Props) {
               className={`py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
                 freshGradPolicy === opt.value
                   ? 'bg-teal-600 text-white border-teal-600'
-                  : 'bg-white text-gray-600 border-gray-300 hover:border-teal-400'
+                  : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-teal-400'
               }`}
             >
               {opt.label}
             </button>
           ))}
         </div>
-        <p className="text-xs text-gray-400 mt-1.5">
+        <p className="text-xs text-[#a8a29e] mt-1.5">
           {freshGradPolicy === 'fresh_grad'      && 'Listing will show a "Fresh Graduate" tag — no prior experience needed.'}
           {freshGradPolicy === 'fresh_grad_plus' && 'Listing will show a "Fresh Grad + Experience" tag — open to fresh grads with some relevant background.'}
           {freshGradPolicy === 'no'              && 'No fresh graduate tag will be shown on the listing.'}
@@ -353,10 +353,10 @@ export default function EditJobForm({ job }: Props) {
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+        <label className="block text-sm font-medium text-[#1c1612] mb-1">Description *</label>
         <textarea rows={6} value={description} onChange={e => setDescription(e.target.value)}
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none" />
-        <p className={`text-xs mt-1 ${description.length === 0 ? 'text-gray-400' : description.length < 50 ? 'text-red-500' : 'text-green-600'}`}>
+          className="input resize-none" />
+        <p className={`text-xs mt-1 ${description.length === 0 ? 'text-[#a8a29e]' : description.length < 50 ? 'text-red-500' : 'text-green-600'}`}>
           {description.length} / 50 characters minimum
         </p>
       </div>
@@ -365,7 +365,7 @@ export default function EditJobForm({ job }: Props) {
       <div className="space-y-4 border border-gray-200 rounded-xl p-5">
         <div>
           <h3 className="text-sm font-semibold text-gray-800">Required qualifications *</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Qualifications a candidate must have to be considered</p>
+          <p className="text-xs text-[#a8a29e] mt-0.5">Qualifications a candidate must have to be considered</p>
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Education / Degree</label>
@@ -385,7 +385,7 @@ export default function EditJobForm({ job }: Props) {
       <div className="space-y-4 border border-gray-200 rounded-xl p-5">
         <div>
           <h3 className="text-sm font-semibold text-gray-800">Preferred qualifications</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Nice-to-haves that would make a candidate stand out</p>
+          <p className="text-xs text-[#a8a29e] mt-0.5">Nice-to-haves that would make a candidate stand out</p>
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Education / Degree</label>
@@ -411,11 +411,11 @@ export default function EditJobForm({ job }: Props) {
       {/* Actions */}
       <div className="flex items-center gap-3">
         <button type="submit" disabled={!canSubmit}
-          className="bg-blue-600 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          className="bg-[#0f2d1f] text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-[#1a4a32] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           {loading ? 'Saving...' : 'Save changes'}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+          className="text-sm text-[#78716c] hover:text-[#1c1612] transition-colors">
           Cancel
         </button>
       </div>

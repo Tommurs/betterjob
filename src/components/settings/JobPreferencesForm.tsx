@@ -63,7 +63,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2.5">Preferred work arrangement</p>
+        <p className="text-sm font-medium text-[#1c1612] mb-2.5">Preferred work arrangement</p>
         <div className="flex flex-wrap gap-2">
           {WORK_ARRANGEMENTS.map(opt => {
             const selected = prefs.work_arrangements.includes(opt.value)
@@ -75,7 +75,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
                 className={`px-3.5 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
                   selected
                     ? 'bg-[#0f2d1f] text-white border-[#0f2d1f]'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                    : 'bg-[#fffefb] text-[#78716c] border-[#e5d8c8] hover:border-[#cfc0ad] hover:bg-[#f2ebe0]'
                 }`}
               >
                 {opt.label}
@@ -86,7 +86,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
       </div>
 
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2.5">Preferred job type</p>
+        <p className="text-sm font-medium text-[#1c1612] mb-2.5">Preferred job type</p>
         <div className="flex flex-wrap gap-2">
           {JOB_TYPES.map(opt => {
             const selected = prefs.job_types.includes(opt.value)
@@ -98,7 +98,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
                 className={`px-3.5 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
                   selected
                     ? 'bg-[#0f2d1f] text-white border-[#0f2d1f]'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                    : 'bg-[#fffefb] text-[#78716c] border-[#e5d8c8] hover:border-[#cfc0ad] hover:bg-[#f2ebe0]'
                 }`}
               >
                 {opt.label}
@@ -109,7 +109,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
       </div>
 
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2.5">Desired salary (per year, £)</p>
+        <p className="text-sm font-medium text-[#1c1612] mb-2.5">Desired salary (per year, £)</p>
         <div className="flex items-center gap-3 max-w-xs">
           <input
             type="number"
@@ -124,7 +124,7 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
             placeholder="Min"
             className="input"
           />
-          <span className="text-slate-400 text-sm shrink-0">to</span>
+          <span className="text-[#a8a29e] text-sm shrink-0">to</span>
           <input
             type="number"
             min={0}
@@ -139,15 +139,15 @@ export default function JobPreferencesForm({ userId, initial }: JobPreferencesFo
             className="input"
           />
         </div>
-        <p className="text-xs text-slate-400 mt-1.5">
+        <p className="text-xs text-[#a8a29e] mt-1.5">
           Used to filter job recommendations. Not shown publicly.
         </p>
       </div>
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-slate-800">Willing to relocate</p>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm font-medium text-[#1c1612]">Willing to relocate</p>
+          <p className="text-xs text-[#a8a29e] mt-0.5">
             Show employers that you are open to relocating for the right role.
           </p>
         </div>

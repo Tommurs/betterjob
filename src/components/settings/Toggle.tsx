@@ -16,7 +16,7 @@ export default function Toggle({ checked, onChange, disabled }: ToggleProps) {
         transition-colors duration-200 cursor-pointer
         focus-visible:ring-2 focus-visible:ring-emerald-500/30 focus-visible:outline-none
         disabled:opacity-50 disabled:cursor-not-allowed
-        ${checked ? 'bg-[#0f2d1f]' : 'bg-slate-200'}`}
+        ${checked ? 'bg-[#0f2d1f]' : 'bg-[#e5d8c8]'}`}
     >
       <span
         className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm

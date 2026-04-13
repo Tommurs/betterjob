@@ -24,32 +24,32 @@ export default async function SettingsPage() {
     <div className="max-w-2xl space-y-10">
 
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Settings</h1>
-        <p className="text-sm text-slate-500 mt-1">Manage your account and security preferences</p>
+        <h1 className="heading-display text-xl font-bold text-[#1c1612]">Settings</h1>
+        <p className="text-sm text-[#78716c] mt-1">Manage your account and security preferences</p>
       </div>
 
       {/* Account */}
-      <section className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden
-                           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Account</h2>
+      <section className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl overflow-hidden
+                           shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+        <div className="px-6 py-4 border-b border-[#e5d8c8]">
+          <h2 className="text-sm font-semibold text-[#1c1612]">Account</h2>
         </div>
         <div className="px-6 py-5 space-y-4">
           <div>
-            <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">
+            <p className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-1">
               Email address
             </p>
-            <p className="text-sm text-slate-800 font-medium">{user.email}</p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-sm text-[#1c1612] font-medium">{user.email}</p>
+            <p className="text-xs text-[#a8a29e] mt-0.5">
               Contact support to change your email address.
             </p>
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">
+            <p className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-1">
               Account type
             </p>
             <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full
-                             bg-[#0f2d1f]/8 text-[#0f2d1f] capitalize">
+                             bg-[#f2ebe0] text-[#0f2d1f] capitalize">
               {role === 'employer' ? 'Employer' : 'Job Seeker'}
             </span>
           </div>
@@ -57,11 +57,11 @@ export default async function SettingsPage() {
       </section>
 
       {/* Notifications */}
-      <section className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden
-                           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Notifications</h2>
-          <p className="text-xs text-slate-400 mt-0.5">Choose which email notifications you receive</p>
+      <section className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl overflow-hidden
+                           shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+        <div className="px-6 py-4 border-b border-[#e5d8c8]">
+          <h2 className="text-sm font-semibold text-[#1c1612]">Notifications</h2>
+          <p className="text-xs text-[#a8a29e] mt-0.5">Choose which email notifications you receive</p>
         </div>
         <div className="px-6 py-5">
           <NotificationsForm
@@ -73,11 +73,11 @@ export default async function SettingsPage() {
       </section>
 
       {/* Privacy & Visibility */}
-      <section className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden
-                           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Privacy &amp; Visibility</h2>
-          <p className="text-xs text-slate-400 mt-0.5">Control who can find and view your profile</p>
+      <section className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl overflow-hidden
+                           shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+        <div className="px-6 py-4 border-b border-[#e5d8c8]">
+          <h2 className="text-sm font-semibold text-[#1c1612]">Privacy &amp; Visibility</h2>
+          <p className="text-xs text-[#a8a29e] mt-0.5">Control who can find and view your profile</p>
         </div>
         <div className="px-6 py-5">
           <PrivacyForm
@@ -93,11 +93,11 @@ export default async function SettingsPage() {
 
       {/* Job Preferences — jobseekers only */}
       {isJobseeker && (
-        <section className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden
-                             shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
-          <div className="px-6 py-4 border-b border-slate-100">
-            <h2 className="text-sm font-semibold text-slate-900">Job Preferences</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Tell us what you are looking for</p>
+        <section className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl overflow-hidden
+                             shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+          <div className="px-6 py-4 border-b border-[#e5d8c8]">
+            <h2 className="text-sm font-semibold text-[#1c1612]">Job Preferences</h2>
+            <p className="text-xs text-[#a8a29e] mt-0.5">Tell us what you are looking for</p>
           </div>
           <div className="px-6 py-5">
             <JobPreferencesForm
@@ -109,11 +109,11 @@ export default async function SettingsPage() {
       )}
 
       {/* Security */}
-      <section className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden
-                           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Security</h2>
-          <p className="text-xs text-slate-400 mt-0.5">Change your password at any time</p>
+      <section className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl overflow-hidden
+                           shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+        <div className="px-6 py-4 border-b border-[#e5d8c8]">
+          <h2 className="text-sm font-semibold text-[#1c1612]">Security</h2>
+          <p className="text-xs text-[#a8a29e] mt-0.5">Change your password at any time</p>
         </div>
         <div className="px-6 py-5">
           <PasswordForm />
@@ -121,15 +121,15 @@ export default async function SettingsPage() {
       </section>
 
       {/* Danger zone */}
-      <section className="bg-white border border-red-100 rounded-2xl overflow-hidden
-                           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]">
+      <section className="bg-[#fffefb] border border-red-100 rounded-2xl overflow-hidden
+                           shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
         <div className="px-6 py-4 border-b border-red-100">
           <h2 className="text-sm font-semibold text-red-600">Danger zone</h2>
         </div>
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-slate-800">Delete account</p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-sm font-medium text-[#1c1612]">Delete account</p>
+            <p className="text-xs text-[#a8a29e] mt-0.5">
               Permanently remove your account and all associated data. This cannot be undone.
             </p>
           </div>

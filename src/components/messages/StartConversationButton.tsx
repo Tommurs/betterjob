@@ -50,7 +50,7 @@ export default function StartConversationButton({ jobId, employerId, applicantId
     <button
       onClick={handleClick}
       disabled={loading}
-      className="text-sm border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors disabled:opacity-50"
+      className="text-sm border border-[#e5d8c8] text-[#78716c] px-4 py-1.5 rounded-xl hover:border-[#cfc0ad] hover:text-[#0f2d1f] transition-colors disabled:opacity-50"
     >
       {loading ? '...' : '✉️ Message'}
     </button>
