@@ -17,18 +17,18 @@ export default async function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/70 shadow-[0_1px_0_rgba(0,0,0,0.04)]">
+    <nav className="sticky top-0 z-50 bg-[#fffefb] border-b border-[#e5d8c8] shadow-[0_1px_0_rgba(28,22,18,0.06)]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-3 items-center h-16">
 
         {/* Logo — left */}
         <Link href="/" className="flex items-center gap-2.5 group justify-self-start">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f2d1f] to-[#166534]
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f2d1f] to-[#1a4a32]
                           flex items-center justify-center text-white text-xs font-bold
                           shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-150">
             B
           </div>
-          <span className="font-bold text-slate-900 tracking-tight text-[15px]">
-            Better<span className="text-[#166534]">Job</span>
+          <span className="heading-display font-bold text-[#0f2d1f] tracking-tight text-[15px]">
+            BetterJob
           </span>
         </Link>
 
@@ -36,7 +36,7 @@ export default async function Navbar() {
         <div className="hidden sm:flex items-center justify-center gap-1 text-sm">
           <Link
             href="/jobs"
-            className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 font-medium
+            className="text-[#78716c] hover:text-[#1c1612] hover:bg-[#e5d8c8]/40 font-medium
                        transition-colors px-3 py-1.5 rounded-lg"
           >
             Browse Jobs
@@ -56,15 +56,14 @@ export default async function Navbar() {
           <div className="flex items-center justify-end gap-2">
             <Link
               href="/login"
-              className="text-sm text-slate-500 hover:text-slate-900 font-medium
-                         transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100"
+              className="text-sm text-[#0f2d1f] hover:text-[#1c1612] font-semibold
+                         transition-colors px-3 py-1.5 rounded-lg hover:bg-[#e5d8c8]/40"
             >
               Sign in
             </Link>
             <Link
               href="/signup"
-              className="text-sm bg-[#0f2d1f] text-white px-4 py-2 rounded-xl
-                         hover:bg-[#166534] transition-colors font-semibold
+              className="btn-primary text-sm px-4 py-2 rounded-xl
                          shadow-sm hover:shadow-md active:scale-[0.98]"
             >
               Get started

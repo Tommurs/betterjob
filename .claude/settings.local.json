@@ -19,7 +19,15 @@
       "Bash(git push:*)",
       "Bash(git pull:*)",
       "Bash(ls /c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\\\\\(dashboard\\\\\\)/applications)",
-      "Bash(ls /c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\\\\\(auth\\\\\\)/)"
+      "Bash(ls /c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\\\\\(auth\\\\\\)/)",
+      "Bash(ls \"/c/Users/thoma/OneDrive/Documents/BetterJob/src/app/\\(dashboard\\)/jobs/\")",
+      "Bash(git stash:*)",
+      "Bash(git merge:*)",
+      "Bash(gh pr:*)",
+      "Bash(git fetch:*)",
+      "Bash(ls -la /c/Users/thoma/OneDrive/Documents/BetterJob/.env*)",
+      "Bash(ls -la /c/Users/thoma/OneDrive/Documents/BetterJob/*.env*)",
+      "WebSearch"
     ]
   }
 }

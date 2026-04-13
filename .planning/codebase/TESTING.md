@@ -4,103 +4,108 @@
 
 ## Test Framework
 
-**Runner:** None installed.
+**Runner:** None configured.
 
-No testing framework, assertion library, or test runner is present in `package.json` (no Jest, Vitest, Playwright, Cypress, or `@testing-library/*` dependencies). There are no test config files (`jest.config.*`, `vitest.config.*`, `playwright.config.*`, `cypress.config.*`).
+No test framework is installed. `package.json` contains no testing dependencies (no Jest, Vitest, Playwright, Cypress, Testing Library, or any `@testing-library/*` package). There is no `jest.config.*`, `vitest.config.*`, `playwright.config.*`, or `cypress.config.*` file in the repository.
 
-**Run Commands:**
-```bash
-# No test commands defined in package.json scripts
-# Only available scripts:
-npm run dev       # Next.js dev server
-npm run build     # Production build
-npm run start     # Start production server
-npm run lint      # ESLint check
-```
+**Run Commands:** None available. `npm run lint` is the only quality script defined.
 
 ## Test File Organization
 
-**Location:** A `tests/` directory exists at the project root with three subdirectories:
-```
-tests/
-├── e2e/           # empty
-├── integration/   # empty
-└── unit/          # empty
-```
-
-All three directories are **empty** — no test files have been written.
-
-**No co-located test files** exist alongside source files (`*.test.ts`, `*.spec.tsx`, etc.).
+**No test files exist.** A search of the entire `src/` directory found zero `.test.*` or `.spec.*` files.
 
 ## What Is Tested
 
-**Nothing is tested.** There are no test files in the codebase.
+Nothing. There is zero automated test coverage in this codebase.
 
-## What Is Not Tested (Full Coverage Gap)
+## What Is Not Tested
 
-Every area of the application lacks test coverage:
+Every part of the application is untested:
 
-**Utility Functions** (`src/lib/utils/index.ts`):
-- `cn()` — class merging
-- `formatSalary()` — currency formatting with edge cases (no min, no max, both)
-- `formatDate()` — date formatting
-- `slugify()` — string transformation
+**Authentication flows** (`src/components/auth/`):
+- `LoginForm.tsx` — email/password sign-in, redirect on success, error display
+- `SignupForm.tsx` — role selection, password confirmation, email confirmation success state
+- `ResetPasswordForm.tsx` — reset request submission
+- `UpdatePasswordForm.tsx` — password update flow
 
-**Validation Schemas** (`src/lib/validations/`):
-- `jobSchema` — salary range logic, required fields, minimum lengths (`src/lib/validations/job.ts`)
-- `loginSchema`, `signupSchema`, `resetPasswordSchema` — password matching, email format (`src/lib/validations/auth.ts`)
+**Job management** (`src/components/jobs/`):
+- `PostJobForm.tsx` — inline salary validation, experience range validation, `canSubmit` logic, tag selection, requirements list management
+- `EditJobForm.tsx` — same validation logic as PostJobForm (duplicated), pre-population from existing job data
+- `ApplyButton.tsx` — modal open/close, cover letter submission, applied state transition
+- `SaveJobButton.tsx` / `UnsaveButton.tsx` — save/unsave toggle behaviour
+- `EmployerJobActions.tsx` — archive/repost/delete flows
 
-**API Routes** (`src/app/api/`):
-- `GET /api/jobs` — job listing retrieval (`src/app/api/jobs/route.ts`)
-- `POST /api/jobs` — job creation with auth check, schema validation (`src/app/api/jobs/route.ts`)
-- `GET /api/auth/callback` — OAuth callback (`src/app/api/auth/callback/route.ts`)
-- `POST /api/cron/purge-deleted-jobs` — purge cron job (`src/app/api/cron/purge-deleted-jobs/route.ts`)
+**Dashboard components** (`src/components/dashboard/`):
+- `EmployerDashboard.tsx` — optimistic job deletion, repost into active list, local state sync
+- `JobSeekerDashboard.tsx` — application list display
+- `RecycleBin.tsx` — soft-deleted jobs display and restore
 
-**Client Components** (`src/components/`):
-- `ApplyButton` — apply flow, modal open/close, form submission (`src/components/jobs/ApplyButton.tsx`)
-- `PostJobForm` — field validation, salary/experience range logic, form submission (`src/components/jobs/PostJobForm.tsx`)
-- `LoginForm` — submit handler, error display (`src/components/auth/LoginForm.tsx`)
-- `SignupForm` — role selection, password confirmation (`src/components/auth/SignupForm.tsx`)
-- `SaveJobButton` — toggle save/unsave, optimistic update (`src/components/jobs/SaveJobButton.tsx`)
-- `StatusUpdater` — application status change flow (`src/components/jobs/StatusUpdater.tsx`)
-- `SearchBar` — query/location state, URL navigation (`src/components/jobs/SearchBar.tsx`)
-- `EmployerDashboard` — archive/repost/delete flows (`src/components/dashboard/EmployerDashboard.tsx`)
-- `RecycleBin` — restore and permanent delete flows (`src/components/dashboard/RecycleBin.tsx`)
+**Profile** (`src/components/profile/`):
+- `ProfileForm.tsx` — skills list management, role-conditional field display, save feedback
 
-**Custom Hooks** (`src/hooks/`):
-- `useUser()` — auth state subscription, loading state (`src/hooks/useUser.ts`)
-- `useSupabase()` — client memoization (`src/hooks/useSupabase.ts`)
+**API routes** (`src/app/api/`):
+- `src/app/api/jobs/route.ts` — GET (listing query), POST (Zod validation, auth check, insert)
+- `src/app/api/cron/purge-deleted-jobs/route.ts` — purge logic for soft-deleted jobs
 
-**Server Components / Pages:**
-- Auth guards (`redirect('/login')` when no user) across dashboard pages
-- Role-based rendering in `DashboardPage` (`src/app/(dashboard)/dashboard/page.tsx`)
-- Job detail page data fetching (`src/app/jobs/[id]/page.tsx`)
+**Validation schemas** (`src/lib/validations/`):
+- `src/lib/validations/job.ts` — `jobSchema` rules (min lengths, required fields, positive numbers)
+- `src/lib/validations/auth.ts` — `loginSchema`, `signupSchema` (password match refine), `resetPasswordSchema`
 
-## Testing Infrastructure Status
+**Utility functions** (`src/lib/utils/index.ts`):
+- `cn()` — clsx + tailwind-merge combination
+- `formatSalary()` — null/undefined handling, single-bound formatting, currency formatting
+- `formatDate()` — locale date formatting
+- `slugify()` — text-to-slug transformation
 
-| Area | Status |
-|------|--------|
-| Unit test runner | Not installed |
-| Integration test runner | Not installed |
-| E2E test runner | Not installed |
-| Test utilities / mocks | Not installed |
-| CI test pipeline | Not detected |
-| Coverage reporting | Not configured |
-| Test directory scaffold | Present (empty) |
+**Hooks** (`src/hooks/`):
+- `useUser.ts` — auth state subscription, loading state, session change handling
+- `useSupabase.ts` — memoised client creation
 
-## Recommendations for Adding Tests
+**Middleware** (`src/middleware.ts`):
+- Session update / cookie refresh logic from `@/lib/supabase/middleware`
 
-The directory scaffold (`tests/unit/`, `tests/integration/`, `tests/e2e/`) signals intent. When adding a test framework:
+**Page-level server components** (`src/app/`):
+- Auth redirect logic in `src/app/(dashboard)/layout.tsx`
+- Search/filter query building in `src/app/jobs/page.tsx`
+- Owner vs. visitor access control in `src/app/jobs/[id]/page.tsx`
 
-**Best fit for this stack:**
-- **Unit/Integration:** Vitest (fast, ESM-native, compatible with Next.js) + `@testing-library/react`
-- **E2E:** Playwright (official Next.js E2E recommendation)
+## Coverage Gaps by Risk Level
 
-**Highest-value first targets:**
-1. `src/lib/utils/index.ts` — pure functions, easiest to unit test, high reuse
-2. `src/lib/validations/` — pure Zod schema tests for edge cases
-3. `src/app/api/jobs/route.ts` — API route integration tests with mocked Supabase
-4. `src/components/auth/LoginForm.tsx` — form interaction and error display
+**High risk (complex logic with no tests):**
+
+- Inline validation in `PostJobForm.tsx` and `EditJobForm.tsx` — salary min/max cross-field validation and experience range ordering are duplicated between these two files and contain multiple edge cases. Any future change risks regression with no safety net.
+- `canSubmit` gate logic — a boolean derived from 8+ conditions; easy to break silently.
+- API route auth and validation in `src/app/api/jobs/route.ts` — Zod parse, auth check, and insert are untested server-side.
+- Soft-delete and purge logic in `src/app/api/cron/purge-deleted-jobs/route.ts` — data-destructive operation with no coverage.
+
+**Medium risk:**
+
+- `formatSalary()` and `formatDate()` in `src/lib/utils/index.ts` — pure functions, easy to unit test, currently not tested. Edge cases (undefined min, undefined max, both undefined) are handled in code but not verified.
+- Zod schemas in `src/lib/validations/` — schema rules are defined but the `signupSchema` password-match `.refine()` and field constraints are not tested.
+- Optimistic UI logic in `EmployerDashboard.tsx` — `handleDelete` and `handleRepost` mutate local state arrays; correctness relies on visual inspection only.
+
+**Lower risk (presentational, easier to verify manually):**
+
+- Layout components (`Navbar.tsx`, `Sidebar.tsx`, `Footer.tsx`)
+- Static page content (`src/app/page.tsx`)
+
+## Recommended Starting Points
+
+If tests are introduced, the highest-value targets in order:
+
+1. **Unit tests for `src/lib/utils/index.ts`** — pure functions, no mocking needed, immediate value.
+2. **Unit tests for Zod schemas** in `src/lib/validations/auth.ts` and `src/lib/validations/job.ts` — pure schema validation, no dependencies.
+3. **Unit tests for validation logic extracted from `PostJobForm`/`EditJobForm`** — the salary and experience cross-field validation IIFEs should be extracted to `src/lib/utils/` and tested independently.
+4. **Integration tests for `src/app/api/jobs/route.ts`** — test auth rejection, Zod failure paths, and successful insert with a mocked Supabase client.
+5. **E2E tests for critical user journeys** — sign up, post a job, apply to a job — using Playwright against a test Supabase project.
+
+## Framework Recommendations (if adopting tests)
+
+Given the Next.js 14 + Supabase stack:
+
+- **Unit/integration:** Vitest — faster than Jest, native ESM support, compatible with `"module": "esnext"` tsconfig
+- **E2E:** Playwright — first-class Next.js support, can test server components and API routes
+- **Supabase mocking:** `@supabase/supabase-js` can be mocked with `vi.mock()` in Vitest; for integration tests use a dedicated Supabase test project with Row Level Security disabled
 
 ---
 

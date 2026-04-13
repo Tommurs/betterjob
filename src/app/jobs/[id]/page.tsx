@@ -7,8 +7,8 @@ import SaveJobButton from '@/components/jobs/SaveJobButton'
 import EmployerJobActions from '@/components/jobs/EmployerJobActions'
 
 const FRESH_GRAD_BADGE: Record<string, { label: string; cls: string }> = {
-  fresh_grad:      { label: 'Fresh Graduate',          cls: 'bg-teal-50 text-teal-700 ring-1 ring-teal-100' },
-  fresh_grad_plus: { label: 'Fresh Grad + Experience', cls: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-100' },
+  fresh_grad:      { label: 'Fresh Graduate',          cls: 'bg-[#d1fae5] text-[#065f46] ring-1 ring-[#a7f3d0]' },
+  fresh_grad_plus: { label: 'Fresh Grad + Experience', cls: 'bg-[#ede9fe] text-[#5b21b6] ring-1 ring-[#ddd6fe]' },
 }
 
 const DEGREE_LABELS: Record<string, string> = {
@@ -30,21 +30,21 @@ const JOB_TYPE_LABELS: Record<string, string> = {
 }
 
 const JOB_TYPE_COLOURS: Record<string, string> = {
-  full_time:  'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100',
-  part_time:  'bg-amber-50 text-amber-700 ring-1 ring-amber-100',
-  contract:   'bg-violet-50 text-violet-700 ring-1 ring-violet-100',
-  temporary:  'bg-orange-50 text-orange-700 ring-1 ring-orange-100',
+  full_time:  'bg-[#d1fae5] text-[#065f46] ring-1 ring-[#a7f3d0]',
+  part_time:  'bg-[#fef3c7] text-[#92400e] ring-1 ring-[#fde68a]',
+  contract:   'bg-[#ede9fe] text-[#5b21b6] ring-1 ring-[#ddd6fe]',
+  temporary:  'bg-[#fff7ed] text-[#9a3412] ring-1 ring-[#fed7aa]',
 }
 
 const COMPANY_PALETTES = [
-  'bg-blue-100 text-blue-700',
-  'bg-violet-100 text-violet-700',
-  'bg-rose-100 text-rose-700',
-  'bg-amber-100 text-amber-700',
-  'bg-teal-100 text-teal-700',
-  'bg-indigo-100 text-indigo-700',
-  'bg-pink-100 text-pink-700',
-  'bg-orange-100 text-orange-700',
+  'bg-[#e8ddd0] text-[#0f2d1f]',
+  'bg-[#fef3c7] text-[#92400e]',
+  'bg-[#d1fae5] text-[#065f46]',
+  'bg-[#fce7f3] text-[#9d174d]',
+  'bg-[#e0e7ff] text-[#3730a3]',
+  'bg-[#fef9ec] text-[#b45309]',
+  'bg-[#f0fdf4] text-[#166534]',
+  'bg-[#fdf2f8] text-[#86198f]',
 ]
 
 function companyPalette(name: string) {
@@ -110,7 +110,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
       {/* Back link */}
       <Link
         href="/jobs"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600
+        className="inline-flex items-center gap-1.5 text-sm text-[#a8a29e] hover:text-[#78716c]
                    transition-colors mb-8 font-medium"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -125,10 +125,9 @@ export default async function JobDetailPage({ params }: { params: { id: string }
         <div className="lg:col-span-2 space-y-8">
 
           {/* Header card */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-6
-                          shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.05)]">
+          <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6
+                          shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_20px_rgba(28,22,18,0.06)]">
             <div className="flex items-start gap-4">
-              {/* Company avatar */}
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center
                                text-sm font-bold shrink-0 ${companyPalette(job.company)}`}>
                 {companyInitials(job.company)}
@@ -145,47 +144,47 @@ export default async function JobDetailPage({ params }: { params: { id: string }
                     </span>
                   )}
                   {!job.is_active && (
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-slate-100 text-slate-500">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-[#f2ebe0] text-[#78716c]">
                       Closed
                     </span>
                   )}
                 </div>
-                <h1 className="text-2xl font-bold text-slate-900 leading-snug">{job.title}</h1>
-                <p className="text-slate-500 mt-1">{job.company} · {job.location}</p>
-                <p className="text-xs text-slate-400 mt-1">Posted {formatDate(job.created_at)}</p>
+                <h1 className="heading-display text-2xl font-bold text-[#1c1612] leading-snug">{job.title}</h1>
+                <p className="text-[#78716c] mt-1">{job.company} · {job.location}</p>
+                <p className="text-xs text-[#a8a29e] mt-1">Posted {formatDate(job.created_at)}</p>
               </div>
             </div>
           </div>
 
           {/* Description */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-6
-                          shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.05)]">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
+          <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6
+                          shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_20px_rgba(28,22,18,0.06)]">
+            <h2 className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-4">
               About the role
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+            <p className="text-sm text-[#78716c] leading-relaxed whitespace-pre-line">
               {job.description}
             </p>
           </div>
 
           {/* Required qualifications */}
           {(job.required_degree || job.requirements?.length > 0) && (
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-6
-                            shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.05)]">
-              <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
+            <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6
+                            shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_20px_rgba(28,22,18,0.06)]">
+              <h2 className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-4">
                 Required qualifications
               </h2>
               {job.required_degree && (
-                <p className="text-sm text-slate-600 mb-3">
-                  <span className="font-semibold text-slate-800">Education: </span>
+                <p className="text-sm text-[#78716c] mb-3">
+                  <span className="font-semibold text-[#1c1612]">Education: </span>
                   {DEGREE_LABELS[job.required_degree] ?? job.required_degree}
                 </p>
               )}
               {job.requirements?.length > 0 && (
                 <ul className="space-y-2.5">
                   {job.requirements.map((req: string, i: number) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                      <span className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center
+                    <li key={i} className="flex items-start gap-3 text-sm text-[#78716c]">
+                      <span className="w-5 h-5 rounded-full bg-[#d1fae5] text-[#065f46] flex items-center
                                        justify-center shrink-0 mt-0.5">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -201,22 +200,22 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
           {/* Preferred qualifications */}
           {(job.preferred_degree || job.preferred_qualifications?.length > 0) && (
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-6
-                            shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.05)]">
-              <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
+            <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6
+                            shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_20px_rgba(28,22,18,0.06)]">
+              <h2 className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-4">
                 Preferred qualifications
               </h2>
               {job.preferred_degree && (
-                <p className="text-sm text-slate-600 mb-3">
-                  <span className="font-semibold text-slate-800">Education: </span>
+                <p className="text-sm text-[#78716c] mb-3">
+                  <span className="font-semibold text-[#1c1612]">Education: </span>
                   {DEGREE_LABELS[job.preferred_degree] ?? job.preferred_degree}
                 </p>
               )}
               {job.preferred_qualifications?.length > 0 && (
                 <ul className="space-y-2.5">
                   {job.preferred_qualifications.map((q: string, i: number) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                      <span className="w-5 h-5 rounded-full bg-amber-50 text-amber-500 flex items-center
+                    <li key={i} className="flex items-start gap-3 text-sm text-[#78716c]">
+                      <span className="w-5 h-5 rounded-full bg-[#fef3c7] text-[#b45309] flex items-center
                                        justify-center shrink-0 mt-0.5">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
@@ -233,39 +232,39 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
         {/* ── Sidebar ── */}
         <div className="space-y-4">
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-5 sticky top-24
-                          shadow-[0_4px_8px_rgba(0,0,0,0.06),0_12px_32px_rgba(15,45,31,0.08)]">
+          <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6 space-y-5 sticky top-24
+                          shadow-[0_4px_8px_rgba(28,22,18,0.07),0_12px_32px_rgba(15,45,31,0.10)]">
 
             {/* Salary */}
             <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">
+              <p className="text-xs font-semibold text-[#a8a29e] uppercase tracking-widest mb-1">
                 Salary
               </p>
-              <p className="text-2xl font-bold text-[#0f2d1f]">
+              <p className="heading-display text-2xl font-bold text-[#0f2d1f]">
                 {formatSalary(job.salary_min, job.salary_max)}
               </p>
             </div>
 
-            <hr className="border-slate-100" />
+            <hr className="border-[#e5d8c8]" />
 
             {/* Details */}
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Company</span>
-                <span className="text-slate-800 font-medium">{job.company}</span>
+                <span className="text-[#a8a29e]">Company</span>
+                <span className="text-[#1c1612] font-medium">{job.company}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Location</span>
-                <span className="text-slate-800 font-medium">{job.location}</span>
+                <span className="text-[#a8a29e]">Location</span>
+                <span className="text-[#1c1612] font-medium">{job.location}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Type</span>
-                <span className="text-slate-800 font-medium">{JOB_TYPE_LABELS[job.type]}</span>
+                <span className="text-[#a8a29e]">Type</span>
+                <span className="text-[#1c1612] font-medium">{JOB_TYPE_LABELS[job.type]}</span>
               </div>
               {(job.experience_min || job.experience_max) && (
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Experience</span>
-                  <span className="text-slate-800 font-medium">
+                  <span className="text-[#a8a29e]">Experience</span>
+                  <span className="text-[#1c1612] font-medium">
                     {job.experience_min && job.experience_max
                       ? `${job.experience_min} – ${job.experience_max} yrs`
                       : `${job.experience_min || job.experience_max} yrs`}
@@ -274,15 +273,15 @@ export default async function JobDetailPage({ params }: { params: { id: string }
               )}
             </div>
 
-            <hr className="border-slate-100" />
+            <hr className="border-[#e5d8c8]" />
 
             {/* Actions */}
             {isOwner ? (
               <div className="space-y-2.5">
                 <Link
                   href={`/jobs/${job.id}/applications`}
-                  className="flex items-center justify-between w-full bg-[#0f2d1f] text-white
-                             text-sm font-semibold px-4 py-3 rounded-xl hover:bg-[#166534]
+                  className="flex items-center justify-between w-full bg-[#0f2d1f] text-[#faf6ef]
+                             text-sm font-semibold px-4 py-3 rounded-xl hover:bg-[#1a4a32]
                              transition-colors active:scale-[0.98]"
                 >
                   <span>View applications</span>
@@ -292,9 +291,9 @@ export default async function JobDetailPage({ params }: { params: { id: string }
                 </Link>
                 <Link
                   href={`/jobs/${job.id}/edit`}
-                  className="flex items-center justify-center w-full border border-slate-200
-                             text-slate-600 text-sm font-medium py-2.5 rounded-xl
-                             hover:border-slate-300 hover:bg-slate-50 transition-colors"
+                  className="flex items-center justify-center w-full border border-[#e5d8c8]
+                             text-[#78716c] text-sm font-medium py-2.5 rounded-xl
+                             hover:border-[#cfc0ad] hover:bg-[#f5ede0] transition-colors"
                 >
                   Edit listing
                 </Link>

@@ -5,17 +5,15 @@
 ## Languages
 
 **Primary:**
-- TypeScript 5.x - All application source code (`src/`)
-- SQL - Supabase database migrations (`supabase/migrations/`)
+- TypeScript ^5 - All application source code in `src/`; strict mode enabled
 
 **Secondary:**
-- CSS (via Tailwind) - Styling, global styles in `src/app/globals.css`
+- SQL - Supabase database migrations in `supabase/migrations/`
 
 ## Runtime
 
 **Environment:**
-- Node.js 20 (Alpine) — specified in `Dockerfile` base image (`node:20-alpine`)
-- Local dev runtime: Node.js v24.14.1 (host machine)
+- Node.js 20 (Alpine) - Specified as base image in `Dockerfile`
 
 **Package Manager:**
 - npm
@@ -24,27 +22,28 @@
 ## Frameworks
 
 **Core:**
-- Next.js 14.2.35 — App Router, React Server Components, API routes, middleware
-- React 18.x — UI rendering
+- Next.js 14.2.35 - App Router exclusively; React Server Components; API routes; Edge middleware
+
+**UI:**
+- React ^18 - Component rendering (`react`, `react-dom`)
+- Tailwind CSS ^3.4.1 - Utility-first CSS; config at `tailwind.config.ts`
+
+**Validation:**
+- Zod ^4.3.6 - Runtime schema validation; schemas in `src/lib/validations/auth.ts` and `src/lib/validations/job.ts`
 
 **Build/Dev:**
-- TypeScript compiler (via Next.js build pipeline) — `tsconfig.json`
-- PostCSS 8.x — CSS processing (`postcss.config.mjs`)
-- Tailwind CSS 3.4.1 — Utility-first styling (`tailwind.config.ts`)
-- ESLint 8.x — Linting via `eslint-config-next` 14.2.35
-
-**No dedicated test runner detected** (tests directory exists at `tests/` with `e2e/`, `integration/`, `unit/` subdirs but no test framework config found at root)
+- PostCSS ^8 - CSS processing; config at `postcss.config.mjs`
+- ESLint ^8 with `eslint-config-next` 14.2.35 - Linting
 
 ## Key Dependencies
 
 **Critical:**
-- `@supabase/supabase-js` ^2.101.1 — Supabase client SDK for DB, Auth, Realtime
-- `@supabase/ssr` ^0.10.0 — Supabase SSR helpers for Next.js (cookie-based session management)
-- `zod` ^4.3.6 — Runtime schema validation for API request bodies
+- `@supabase/supabase-js` ^2.101.1 - Core Supabase client; used for DB queries, auth, and realtime
+- `@supabase/ssr` ^0.10.0 - Supabase SSR helpers (`createBrowserClient`, `createServerClient`) for cookie-based sessions in Next.js
 
-**Utility:**
-- `clsx` ^2.1.1 — Conditional className construction
-- `tailwind-merge` ^3.5.0 — Merges Tailwind class strings, resolving conflicts
+**Utilities:**
+- `clsx` ^2.1.1 - Conditional className construction
+- `tailwind-merge` ^3.5.0 - Tailwind class conflict resolution (used together with `clsx` in `src/lib/utils/index.ts`)
 
 ## Scripts
 
@@ -58,34 +57,34 @@ npm run lint     # next lint — ESLint check
 
 ## Configuration
 
-**Path Aliases:**
-- `@/*` maps to `./src/*` — defined in `tsconfig.json`
-
 **TypeScript:**
-- Strict mode enabled (`"strict": true`)
+- Path alias: `@/*` → `./src/*` - defined in `tsconfig.json`
+- Strict mode: enabled (`"strict": true`)
 - Module resolution: `bundler`
-- Target: ESNext
+- JSX: `preserve` (handled by Next.js)
 
 **Tailwind:**
-- Content paths: `src/pages/**`, `src/components/**`, `src/app/**`
-- Custom CSS variables for `background` and `foreground` colors
+- Content scan paths: `src/pages/**`, `src/components/**`, `src/app/**`
+- Custom CSS variables: `background`, `foreground` colors extended in theme
 - Config: `tailwind.config.ts`
 
 **Next.js:**
-- Config: `next.config.mjs` — minimal, no custom config
-- App Router only (no `pages/` directory)
+- Config: `next.config.mjs` - minimal, no custom configuration
+- App Router only; no `pages/` directory
+
+**Build:**
+- No test runner config at root; `tests/` directory has `unit/`, `integration/`, `e2e/` subdirectories but no framework config detected
 
 ## Platform Requirements
 
 **Development:**
-- Node.js 20+ (Docker) or Node.js 24.x (host)
-- Docker + Docker Compose for containerized dev: `docker-compose.yml`
+- Node.js 20
+- Docker + Docker Compose for containerized dev: `docker-compose.yml` (hot-reload via `WATCHPACK_POLLING=true`)
 - `.env.local` required with Supabase credentials
 
 **Production:**
-- Deployment target: Vercel (see `vercel.json`)
-- Docker production build available via `Dockerfile` (multi-stage: development → builder → production)
-- Vercel Cron Jobs configured in `vercel.json`
+- Primary deployment target: **Vercel** (`vercel.json` present; Vercel Cron configured)
+- Docker production image available via multi-stage `Dockerfile` (development → builder → production targets, all Node 20 Alpine)
 
 ---
 

@@ -49,15 +49,15 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
     .toUpperCase()
 
   return (
-    <aside className="w-60 shrink-0 bg-white border-r border-slate-200/80 flex flex-col">
+    <aside className="w-60 shrink-0 bg-[#0f2d1f] border-r border-[#fffefb]/10 flex flex-col">
       {/* User info */}
-      <div className="px-5 py-5 border-b border-slate-100">
-        <div className="w-9 h-9 rounded-full bg-[#0f2d1f] text-white text-sm font-bold
+      <div className="px-5 py-5 border-b border-[#fffefb]/10">
+        <div className="w-9 h-9 rounded-full bg-[#fffefb]/15 text-[#faf6ef] text-sm font-bold
                         flex items-center justify-center mb-3">
           {initials}
         </div>
-        <p className="text-sm font-semibold text-slate-900 truncate">{fullName}</p>
-        <p className="text-xs text-slate-400 capitalize mt-0.5">{role?.replace('_', ' ')}</p>
+        <p className="text-sm font-semibold text-[#faf6ef] truncate">{fullName}</p>
+        <p className="text-xs text-[#a8a29e] capitalize mt-0.5">{role?.replace('_', ' ')}</p>
       </div>
 
       {/* Navigation */}
@@ -70,8 +70,8 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
               href={item.href}
               className={`flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-[#0f2d1f] text-white'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-[#fffefb]/10 text-white'
+                  : 'text-[#d4c5b2] hover:bg-white/8 hover:text-[#faf6ef]'
               }`}
             >
               {item.label}
@@ -81,11 +81,11 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
       </nav>
 
       {/* Sign out */}
-      <div className="px-3 py-4 border-t border-slate-100">
+      <div className="px-3 py-4 border-t border-[#fffefb]/10">
         <button
           onClick={handleSignOut}
           className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium
-                     text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                     text-[#a8a29e] hover:bg-white/8 hover:text-[#faf6ef] transition-colors"
         >
           Sign out
         </button>

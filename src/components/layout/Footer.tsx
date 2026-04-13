@@ -13,7 +13,7 @@ export default function Footer() {
                               text-white text-xs font-bold">
                 B
               </div>
-              <span className="text-white font-bold tracking-tight">BetterJob</span>
+              <span className="heading-display text-white font-bold tracking-tight">BetterJob</span>
             </div>
             <p className="text-sm text-white/40 leading-relaxed max-w-[200px]">
               Connecting great people with companies worth working for.

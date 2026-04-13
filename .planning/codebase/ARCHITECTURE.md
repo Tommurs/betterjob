@@ -4,151 +4,183 @@
 
 ## Pattern Overview
 
-**Overall:** Server-first Next.js App Router with Supabase as the backend
+**Overall:** Next.js 14 App Router with server-first rendering and Supabase for auth and database.
 
 **Key Characteristics:**
-- Server Components handle all data fetching — pages query Supabase directly using `createClient()` from `src/lib/supabase/server.ts`
-- Client Components are used only where interactivity is required (forms, buttons, sidebar navigation)
-- No API layer for most reads — server pages call Supabase directly and pass data as props to client components
-- Route Groups `(auth)` and `(dashboard)` provide layout scoping without affecting URL paths
-- Auth is enforced at two levels: middleware (redirect unauthenticated users) and layout/page level (secondary `redirect()` guard)
+- Server Components fetch data directly from Supabase — no intermediate service layer for page rendering
+- Client Components are leaf-level interactive islands (`'use client'`) embedded in server-rendered pages
+- Route Groups (`(auth)`, `(dashboard)`) organise pages without affecting URL paths and apply shared layouts
+- Two-layer auth guard: middleware for fast edge redirect, dashboard layout for role resolution
+- No global state management library — auth state is read server-side per request; client components use the Supabase browser client directly with `router.refresh()` after mutations
 
 ## Layers
 
-**Routing Layer:**
-- Purpose: URL structure, layout nesting, code splitting
+**Routing / Pages:**
+- Purpose: Define URL structure, fetch page-level data, compose components
 - Location: `src/app/`
-- Contains: `page.tsx`, `layout.tsx`, route groups `(auth)`, `(dashboard)`, dynamic segments `[id]`
-- Depends on: Components layer, Supabase server client
-- Used by: Next.js router
+- Contains: `page.tsx`, `layout.tsx`, `route.ts` (API) files, route groups, dynamic segments
+- Depends on: `src/lib/supabase/server.ts`, `src/components/`, `src/lib/utils/`
+- Used by: Next.js router, browsers
 
-**Middleware Layer:**
-- Purpose: Session refresh and route protection before page render
-- Location: `src/middleware.ts`, `src/lib/supabase/middleware.ts`
-- Contains: `updateSession()` — reads/writes Supabase auth cookies, redirects unauthenticated users away from protected paths
+**Middleware:**
+- Purpose: Session cookie refresh and first-pass route protection before any page renders
+- Location: `src/middleware.ts` (entry), `src/lib/supabase/middleware.ts` (logic)
+- Contains: `updateSession()` — reads Supabase cookies, re-validates session, checks protected path list, issues redirects
 - Depends on: `@supabase/ssr`
-- Used by: Every non-static request (matcher excludes `_next/static`, `_next/image`, images)
+- Used by: Every non-static request (matcher excludes `_next/static`, `_next/image`, and static assets)
 
-**Component Layer:**
-- Purpose: UI — both server-renderable display components and interactive client components
+**React Components:**
+- Purpose: Reusable UI; server components render markup, client components handle interactivity
 - Location: `src/components/`
-- Contains: Feature-grouped subdirectories (`auth/`, `dashboard/`, `jobs/`, `layout/`, `messages/`, `profile/`)
-- Depends on: Supabase client (browser), hooks, utils
-- Used by: Pages in `src/app/`
+- Contains: Feature-grouped subdirectories: `auth/`, `dashboard/`, `jobs/`, `layout/`, `messages/`, `profile/`, `forms/`, `ui/`
+- Depends on: `src/lib/supabase/client.ts` (client components), props passed from server pages
+- Used by: Pages and layouts
 
-**Data / Library Layer:**
-- Purpose: Supabase client factories, validation schemas, utility functions
-- Location: `src/lib/`
-- Contains: `supabase/server.ts`, `supabase/client.ts`, `supabase/middleware.ts`, `validations/`, `utils/`
-- Depends on: `@supabase/ssr`, `zod`, `clsx`, `tailwind-merge`
+**Supabase Clients (Three Contexts):**
+- Purpose: Provide the correct Supabase client for each execution environment
+- Location: `src/lib/supabase/`
+- Files:
+  - `server.ts` — Server Components and Route Handlers; reads/writes cookies via `next/headers`
+  - `client.ts` — Client Components; browser singleton via `createBrowserClient`
+  - `middleware.ts` — Edge Middleware only; reads/writes via `NextRequest`/`NextResponse`
+- Rule: Never import `server.ts` inside a `'use client'` component. Never import `client.ts` in a Server Component.
+
+**Utilities and Validations:**
+- Purpose: Shared pure helpers and Zod input schemas
+- Location: `src/lib/utils/index.ts`, `src/lib/validations/`
+- Contains: `cn()`, `formatSalary()`, `formatDate()`, `slugify()`; `jobSchema`, `loginSchema`, `signupSchema`, `resetPasswordSchema`
 - Used by: Pages, API routes, components
 
-**API Routes Layer:**
-- Purpose: Webhook/cron endpoints and one REST endpoint consumed externally
+**Types:**
+- Purpose: Shared TypeScript interfaces for domain models
+- Location: `src/types/index.ts`
+- Contains: `UserRole`, `User`, `JobListing`, `Application`, `Profile`
+
+**API Routes:**
+- Purpose: Server-side endpoints for external triggers and mutations
 - Location: `src/app/api/`
 - Contains: `auth/callback/route.ts`, `jobs/route.ts`, `cron/purge-deleted-jobs/route.ts`
-- Depends on: Supabase server client, validation schemas
-- Used by: Supabase OAuth callback, external cron trigger (Vercel), external clients if needed
-
-**Types Layer:**
-- Purpose: Shared TypeScript interfaces
-- Location: `src/types/index.ts`
-- Contains: `User`, `JobListing`, `Application`, `Profile`, `UserRole`
-- Depends on: Nothing
-- Used by: Components and pages throughout
 
 ## Data Flow
 
-**Standard Page Data Fetch (Server Component):**
-1. Page component calls `createClient()` from `src/lib/supabase/server.ts`
-2. Calls `supabase.auth.getUser()` to get the current session
-3. Queries the relevant Supabase tables directly (e.g., `job_listings`, `applications`)
-4. Passes fetched data as props to Client Component children for rendering
-5. Example: `src/app/(dashboard)/dashboard/page.tsx` → `JobSeekerDashboard` or `EmployerDashboard`
+**Public Page Render (e.g., homepage, job listings, job detail):**
 
-**Mutation Flow (Client Component):**
-1. Client Component uses `createClient()` from `src/lib/supabase/client.ts` (browser client)
-2. Calls Supabase JS SDK directly (e.g., `supabase.from('saved_jobs').insert(...)`)
-3. Calls `router.refresh()` after mutation to trigger server re-render
-4. Example: `src/components/jobs/SaveJobButton.tsx`, `src/components/jobs/ApplyButton.tsx`
+1. Request arrives; middleware (`src/middleware.ts`) calls `updateSession` — refreshes Supabase session cookie and checks protected path list
+2. Server Component (`src/app/page.tsx`, `src/app/jobs/page.tsx`, or `src/app/jobs/[id]/page.tsx`) calls `createClient()` from `src/lib/supabase/server.ts`
+3. Page runs `Promise.all` to fetch job listings, user session, and saved job IDs in parallel
+4. Passes fetched data as props to Client Component children (`SaveJobButton`, `ApplyButton`, `SearchBar`)
+5. HTML is streamed to the browser; client components hydrate
 
-**Auth Flow:**
-1. User submits login form in `src/components/auth/LoginForm.tsx` (Client Component)
-2. Calls `supabase.auth.signInWithPassword()` using browser client
-3. On success, calls `router.push('/dashboard')` + `router.refresh()`
-4. Middleware (`src/middleware.ts`) refreshes session cookies on every subsequent request via `updateSession()`
-5. Protected paths: `/dashboard`, `/profile`, `/applications`, `/saved`, `/jobs/post`, `/messages`, `/recyclebin` — unauthenticated users are redirected to `/login`
+**Authenticated Dashboard Render:**
 
-**OAuth Callback Flow:**
-1. Supabase redirects to `/api/auth/callback` with an auth `code`
-2. `src/app/api/auth/callback/route.ts` exchanges code for session via `supabase.auth.exchangeCodeForSession()`
-3. Redirects to `/dashboard` on success, `/login?error=auth-callback-failed` on failure
+1. Middleware checks path against `protectedPaths` list; redirects to `/login` if no session
+2. Dashboard layout (`src/app/(dashboard)/layout.tsx`) independently calls `createClient()`, fetches `user` and `profile` (role, full name)
+3. If no user, `redirect('/login')` (second guard — handles edge session timing cases)
+4. Layout passes `role` and `fullName` to `<Sidebar>` (a Client Component)
+5. Child `page.tsx` calls `createClient()` itself to fetch its own data (e.g., applications, posted jobs)
 
-**Signup Flow:**
-1. `src/components/auth/SignupForm.tsx` calls `supabase.auth.signUp()` with `full_name` and `role` in metadata
-2. Supabase trigger `handle_new_user()` auto-creates a row in `public.profiles` with the user's name and role
-3. User is redirected to `/dashboard`
+**Client-Side Mutation (apply for job, save/unsave, send message):**
+
+1. User interaction triggers a handler in a Client Component
+2. Component calls `createClient()` from `src/lib/supabase/client.ts` — browser client
+3. Directly inserts or deletes a row in Supabase (`applications`, `saved_jobs`, `messages`)
+4. On success, calls `router.refresh()` to re-run the Server Component data fetch without full navigation
+
+**Auth Flow — Sign Up:**
+
+1. `SignupForm` (`src/components/auth/SignupForm.tsx`) calls `supabase.auth.signUp()` with `emailRedirectTo: /api/auth/callback` and metadata `{ full_name, role }`
+2. Supabase sends a confirmation email; user sees "check your email" state
+3. User clicks email link → GET `/api/auth/callback?code=...` (`src/app/api/auth/callback/route.ts`)
+4. Route handler calls `supabase.auth.exchangeCodeForSession(code)` to mint session cookies
+5. Redirects to `/dashboard`
+
+**Auth Flow — Sign In:**
+
+1. `LoginForm` (`src/components/auth/LoginForm.tsx`) calls `supabase.auth.signInWithPassword({ email, password })`
+2. Supabase sets session cookies via the browser client
+3. `router.push('/dashboard')` + `router.refresh()` navigates the user
+
+**Auth Flow — Sign Out:**
+
+1. Client Component (`Sidebar` or `NavbarUserMenu`) calls `supabase.auth.signOut()`
+2. Supabase browser client clears session cookies
+3. `router.push('/')` + `router.refresh()` returns user to homepage
+
+**State Management:**
+- No global state store
+- Auth state is read server-side on every request via `supabase.auth.getUser()` (validates token; does not use cached session)
+- Client auth state: `useUser` hook (`src/hooks/useUser.ts`) subscribes to `onAuthStateChange` for reactive updates in the rare Client Components that need it
+- UI state (modals, loading, form values, errors): local `useState` inside individual Client Components
 
 ## Key Abstractions
 
-**Role-Based UI:**
-- Purpose: Show different dashboards and sidebar nav items based on user role (`jobseeker` | `employer`)
-- Examples: `src/app/(dashboard)/dashboard/page.tsx`, `src/components/layout/Sidebar.tsx`
-- Pattern: Server page fetches `profile.role`, passes it as a prop to the client sidebar and renders the appropriate dashboard component
+**Supabase Client Factory (Three Files):**
+- Purpose: Correct Supabase client for each execution context; prevents cookie mishandling
+- Files: `src/lib/supabase/server.ts`, `src/lib/supabase/client.ts`, `src/lib/supabase/middleware.ts`
+- Pattern: Each file exports `createClient()`. Import from the file that matches your context. The import path is the signal — not a runtime flag.
 
-**Soft Delete (Recycle Bin):**
-- Purpose: Jobs are soft-deleted via a `deleted_at` timestamp rather than hard deleted
-- Examples: `src/app/(dashboard)/recyclebin/page.tsx`, `src/app/api/cron/purge-deleted-jobs/route.ts`
-- Pattern: Queries filter with `.is('deleted_at', null)` for active listings; a weekly Vercel cron job permanently purges rows older than 7 days
+**Route Groups with Shared Layouts:**
+- Purpose: Apply distinct layout shells without adding URL path segments
+- Files: `src/app/(auth)/`, `src/app/(dashboard)/layout.tsx`
+- Pattern: `(auth)` routes share only the root layout (Navbar + Footer). `(dashboard)` routes additionally share `layout.tsx`, which enforces auth and renders the Sidebar. URLs are `/login`, `/dashboard` — no group name appears.
 
-**Supabase RLS (Row Level Security):**
-- Purpose: Database-level access control — enforced on all tables
-- Examples: `supabase/migrations/001_initial_schema.sql`, `003_messages.sql`
-- Pattern: Policies lock reads/writes to the authenticated user's own data; employers can see applications for their own jobs; public can read active job listings
+**Role-Based Branching:**
+- Purpose: Show different dashboards, sidebar nav, and page content based on user role
+- Files: `src/app/(dashboard)/dashboard/page.tsx`, `src/components/layout/Sidebar.tsx`
+- Pattern: Server page fetches `profile.role` from Supabase, then either passes it as a prop (Sidebar) or renders a different component tree (`JobSeekerDashboard` vs `EmployerDashboard`). The two nav arrays `JOBSEEKER_NAV` and `EMPLOYER_NAV` are selected in `Sidebar.tsx` based on the `role` prop.
 
-**Fresh Graduate Policy:**
-- Purpose: Jobs can be tagged as open to fresh graduates or fresh grads with some experience
-- Examples: `src/app/page.tsx`, `src/app/jobs/[id]/page.tsx`
-- Pattern: `fresh_grad_policy` field on `job_listings` with values `fresh_grad` | `fresh_grad_plus`; rendered as color-coded badges
+**Soft Delete / Recycle Bin:**
+- Purpose: Employers can delete job listings without permanent loss; purge occurs after 7 days
+- Files: `src/app/(dashboard)/recyclebin/page.tsx`, `src/app/api/cron/purge-deleted-jobs/route.ts`
+- Pattern: `job_listings` rows get a `deleted_at` timestamp instead of being hard-deleted. All queries for live listings filter with `.is('deleted_at', null)`. A Vercel cron (weekly, `vercel.json`) calls the purge route which hard-deletes rows older than 7 days.
+
+**Fresh Graduate Policy Badges:**
+- Purpose: Job listings can signal openness to fresh graduates
+- Files: `src/app/page.tsx`, `src/app/jobs/page.tsx`, `src/app/jobs/[id]/page.tsx`
+- Pattern: `fresh_grad_policy` field on `job_listings` with values `fresh_grad` | `fresh_grad_plus`. Rendered as inline color-coded badge pills using constant maps `FRESH_GRAD_BADGE`.
 
 ## Entry Points
 
 **Root Layout:**
 - Location: `src/app/layout.tsx`
 - Triggers: Every page request
-- Responsibilities: Applies global fonts, renders `<Navbar>` and `<Footer>` around all page content
+- Responsibilities: Applies Geist font variables, renders `<Navbar>` (async Server Component) and `<Footer>` around all page content
+
+**Middleware:**
+- Location: `src/middleware.ts`
+- Triggers: Every non-static request (configured via `matcher`)
+- Responsibilities: Calls `updateSession` from `src/lib/supabase/middleware.ts` — refreshes cookies and redirects unauthenticated users away from the protected path list (`/dashboard`, `/profile`, `/applications`, `/saved`, `/jobs/post`, `/messages`, `/recyclebin`)
 
 **Dashboard Layout:**
 - Location: `src/app/(dashboard)/layout.tsx`
 - Triggers: Any route under `/(dashboard)/`
-- Responsibilities: Verifies auth (redirects if unauthenticated), fetches user profile/role, renders `<Sidebar>` with role-aware nav
+- Responsibilities: Second auth guard, fetches user profile (role + full name), renders `<Sidebar>` as a Client Component with those props
 
-**Root Page (Homepage):**
-- Location: `src/app/page.tsx`
-- Triggers: GET `/`
-- Responsibilities: Fetches 5 most recent active job listings, checks saved status for logged-in users, renders hero + categories + recent listings
-
-**Middleware:**
-- Location: `src/middleware.ts`
-- Triggers: Every non-static request
-- Responsibilities: Refreshes Supabase session cookies; redirects unauthenticated users away from protected paths
+**OAuth Callback Route:**
+- Location: `src/app/api/auth/callback/route.ts`
+- Triggers: Supabase email confirmation redirect
+- Responsibilities: Exchanges PKCE auth code for session, redirects to `/dashboard` on success or `/login?error=auth-callback-failed` on failure
 
 ## Error Handling
 
-**Strategy:** Inline, component-level — no global error boundary pattern
+**Strategy:** Inline and component-local — no global error boundary or centralised error handler.
 
 **Patterns:**
-- Server pages use `notFound()` from `next/navigation` for missing or unauthorized resources (e.g., `src/app/jobs/[id]/page.tsx`)
-- Server pages use `redirect('/login')` for unauthenticated access as a secondary guard after middleware
-- API routes return `NextResponse.json({ error: ... }, { status: N })` for all error cases
-- Client components use local `useState` error strings displayed inline in forms
-- Supabase errors are checked via the `error` property returned from every SDK call
+- Server pages: `notFound()` from `next/navigation` when a resource is missing or access is denied (e.g., `src/app/jobs/[id]/page.tsx` calls `notFound()` for deleted/inactive jobs the user does not own)
+- Server pages: `redirect('/login')` as a secondary auth guard in layouts and pages
+- API routes: `NextResponse.json({ error: error.message }, { status: N })` for all error paths
+- Client components: local `error` state string displayed inline as a red-bordered paragraph
+- Supabase SDK: every call returns `{ data, error }` — always check `error` before using `data`
 
 ## Cross-Cutting Concerns
 
-**Logging:** None — no logging library; errors are surfaced to the user only
-**Validation:** Zod schemas in `src/lib/validations/` — `jobSchema` used in `POST /api/jobs`, `loginSchema`/`signupSchema` defined but not consumed via the API route (auth forms call Supabase SDK directly)
-**Authentication:** Supabase Auth — session managed via cookies using `@supabase/ssr`; two-layer enforcement (middleware + layout/page redirect)
+**Logging:** None — no logging library. Errors are surfaced to the UI only; nothing is logged server-side.
+
+**Validation:** Zod schemas in `src/lib/validations/`. `jobSchema` is used in `POST /api/jobs` route handler via `safeParse`. Auth schemas (`loginSchema`, `signupSchema`) are defined but auth forms currently validate manually in component state rather than using them — the schemas are not wired to the form submission handlers.
+
+**Authentication:** Supabase Auth with cookie-based JWT sessions via `@supabase/ssr`. `supabase.auth.getUser()` is always used (not `getSession()`), which re-validates the JWT with Supabase servers on each call. Enforced at two layers: middleware redirect and layout/page-level redirect.
+
+**Path Alias:** `@/` maps to `src/` (configured in `tsconfig.json`). Use `@/` imports throughout — never use relative paths that traverse up directories (e.g., `../../lib`).
 
 ---
 

@@ -52,7 +52,7 @@ export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
       <button
         onClick={() => setOpen(prev => !prev)}
         className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5
-                   hover:bg-slate-100 transition-colors"
+                   hover:bg-[#e5d8c8]/40 transition-colors"
       >
         {avatarUrl ? (
           <img src={avatarUrl} alt={fullName} className="w-8 h-8 rounded-full object-cover" />
@@ -63,11 +63,11 @@ export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
           </div>
         )}
         <div className="hidden sm:block text-left">
-          <p className="text-sm font-semibold text-slate-800 leading-tight">{fullName}</p>
-          <p className="text-xs text-slate-400 capitalize leading-tight">{role?.replace('_', ' ')}</p>
+          <p className="text-sm font-semibold text-[#1c1612] leading-tight">{fullName}</p>
+          <p className="text-xs text-[#a8a29e] capitalize leading-tight">{role?.replace('_', ' ')}</p>
         </div>
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-[#a8a29e] transition-transform ${open ? 'rotate-180' : ''}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -75,11 +75,11 @@ export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-2xl
-                        shadow-[0_8px_32px_rgba(0,0,0,0.12)] py-1.5 z-50">
-          <div className="px-4 py-3 border-b border-slate-100">
-            <p className="text-sm font-semibold text-slate-900 truncate">{fullName}</p>
-            <p className="text-xs text-slate-400 capitalize mt-0.5">{role?.replace('_', ' ')}</p>
+        <div className="absolute right-0 mt-2 w-52 bg-[#fffefb] border border-[#e5d8c8] rounded-2xl
+                        shadow-[0_8px_32px_rgba(28,22,18,0.10)] py-1.5 z-50">
+          <div className="px-4 py-3 border-b border-[#e5d8c8]">
+            <p className="text-sm font-semibold text-[#1c1612] truncate">{fullName}</p>
+            <p className="text-xs text-[#a8a29e] capitalize mt-0.5">{role?.replace('_', ' ')}</p>
           </div>
 
           <div className="py-1">
@@ -88,12 +88,12 @@ export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between px-4 py-2 text-sm text-slate-600
-                           hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-between px-4 py-2 text-sm text-[#78716c]
+                           hover:text-[#1c1612] hover:bg-[#e5d8c8]/30 transition-colors"
               >
                 <span>{item.label}</span>
                 {item.badge && (
-                  <span className="text-xs bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full">
+                  <span className="text-xs bg-[#e5d8c8] text-[#a8a29e] px-2 py-0.5 rounded-full">
                     {item.badge}
                   </span>
                 )}
@@ -101,11 +101,11 @@ export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
             ))}
           </div>
 
-          <div className="border-t border-slate-100 py-1">
+          <div className="border-t border-[#e5d8c8] py-1">
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500
-                         hover:bg-red-50 hover:text-red-600 transition-colors"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-[#a8a29e]
+                         hover:bg-[#e5d8c8]/30 hover:text-[#1c1612] transition-colors"
             >
               Sign out
             </button>

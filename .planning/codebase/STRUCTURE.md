@@ -7,229 +7,249 @@
 ```
 BetterJob/
 ├── src/
-│   ├── app/                        # Next.js App Router — pages, layouts, API routes
-│   │   ├── (auth)/                 # Auth route group (no layout wrapper, no URL segment)
+│   ├── app/                              # Next.js App Router — all pages, layouts, API routes
+│   │   ├── (auth)/                       # Route group: auth pages (no layout wrapper, no URL segment)
 │   │   │   ├── login/page.tsx
 │   │   │   ├── signup/page.tsx
 │   │   │   └── reset-password/
 │   │   │       ├── page.tsx
 │   │   │       └── update/page.tsx
-│   │   ├── (dashboard)/            # Protected route group with Sidebar layout
-│   │   │   ├── layout.tsx          # Auth guard + role fetch + Sidebar render
+│   │   ├── (dashboard)/                  # Route group: protected pages with Sidebar layout
+│   │   │   ├── layout.tsx                # Auth guard + role fetch + Sidebar render
 │   │   │   ├── applications/page.tsx
 │   │   │   ├── dashboard/page.tsx
 │   │   │   ├── profile/page.tsx
 │   │   │   ├── recyclebin/page.tsx
 │   │   │   └── saved/page.tsx
-│   │   ├── api/                    # API route handlers
-│   │   │   ├── auth/callback/route.ts    # OAuth callback
+│   │   ├── api/                          # API route handlers (route.ts files only)
+│   │   │   ├── auth/callback/route.ts    # OAuth/magic-link callback
 │   │   │   ├── jobs/route.ts             # GET + POST /api/jobs
 │   │   │   └── cron/purge-deleted-jobs/route.ts
-│   │   ├── jobs/                   # Public job pages
-│   │   │   ├── page.tsx            # Job listings / search
-│   │   │   ├── post/page.tsx       # Post a job (employer only)
+│   │   ├── jobs/                         # Public job pages (no auth required for reads)
+│   │   │   ├── page.tsx                  # Job listing / search
+│   │   │   ├── post/page.tsx             # Post a job (employer only)
 │   │   │   └── [id]/
-│   │   │       ├── page.tsx        # Job detail
-│   │   │       ├── edit/page.tsx   # Edit listing
-│   │   │       └── applications/page.tsx  # View applicants
+│   │   │       ├── page.tsx              # Job detail
+│   │   │       ├── edit/page.tsx         # Edit listing
+│   │   │       └── applications/page.tsx # Employer: view applicants
 │   │   ├── messages/
-│   │   │   ├── page.tsx            # Conversation list
-│   │   │   └── [id]/page.tsx       # Message thread
-│   │   ├── fonts/                  # Local font files (GeistVF, GeistMonoVF)
-│   │   ├── globals.css             # Tailwind base styles
-│   │   ├── layout.tsx              # Root layout (Navbar + Footer)
-│   │   └── page.tsx                # Homepage
-│   ├── components/                 # UI components
-│   │   ├── auth/                   # Auth forms (LoginForm, SignupForm, etc.)
-│   │   ├── dashboard/              # Dashboard views (JobSeekerDashboard, EmployerDashboard, RecycleBin)
-│   │   ├── forms/                  # Shared form primitives (if any)
-│   │   ├── jobs/                   # Job-related components (PostJobForm, EditJobForm, ApplyButton, SaveJobButton, SearchBar, etc.)
-│   │   ├── layout/                 # Shell components (Navbar, NavbarUserMenu, Sidebar, Footer)
-│   │   ├── messages/               # Messaging components (MessageThread, StartConversationButton)
-│   │   ├── profile/                # Profile components (ProfileForm)
-│   │   └── ui/                     # Generic/reusable UI primitives
+│   │   │   ├── page.tsx                  # Conversation list
+│   │   │   └── [id]/page.tsx             # Message thread
+│   │   ├── fonts/                        # Local font files (GeistVF.woff, GeistMonoVF.woff)
+│   │   ├── globals.css                   # Tailwind base styles
+│   │   ├── layout.tsx                    # Root layout — Navbar + Footer wrapper
+│   │   └── page.tsx                      # Homepage (hero, categories, recent listings)
+│   ├── components/                       # All React components, grouped by feature domain
+│   │   ├── auth/                         # Auth forms
+│   │   ├── dashboard/                    # Dashboard view components
+│   │   ├── forms/                        # Shared form primitives (directory exists, currently empty)
+│   │   ├── jobs/                         # Job-related components
+│   │   ├── layout/                       # Shell components (Navbar, Sidebar, Footer)
+│   │   ├── messages/                     # Messaging components
+│   │   ├── profile/                      # Profile components
+│   │   └── ui/                           # Generic reusable UI primitives
 │   ├── hooks/
-│   │   ├── useSupabase.ts          # Returns memoized browser Supabase client
-│   │   └── useUser.ts              # Subscribes to Supabase auth state changes
+│   │   ├── useSupabase.ts                # Returns memoized browser Supabase client
+│   │   └── useUser.ts                    # Reactive auth state via onAuthStateChange
 │   ├── lib/
 │   │   ├── supabase/
-│   │   │   ├── client.ts           # Browser client factory (createBrowserClient)
-│   │   │   ├── server.ts           # Server client factory (createServerClient + cookies)
-│   │   │   └── middleware.ts       # updateSession() — cookie refresh + route guard
+│   │   │   ├── client.ts                 # Browser client factory (createBrowserClient)
+│   │   │   ├── server.ts                 # Server client factory (createServerClient + cookies)
+│   │   │   └── middleware.ts             # updateSession() — cookie refresh + route guard logic
 │   │   ├── utils/
-│   │   │   └── index.ts            # cn(), formatSalary(), formatDate(), slugify()
+│   │   │   └── index.ts                  # cn(), formatSalary(), formatDate(), slugify()
 │   │   └── validations/
-│   │       ├── auth.ts             # loginSchema, signupSchema, resetPasswordSchema (Zod)
-│   │       └── job.ts              # jobSchema (Zod)
-│   ├── middleware.ts               # Next.js middleware entry — delegates to lib/supabase/middleware.ts
-│   ├── styles/                     # Additional global styles (if any)
+│   │       ├── auth.ts                   # loginSchema, signupSchema, resetPasswordSchema (Zod)
+│   │       └── job.ts                    # jobSchema (Zod)
+│   ├── middleware.ts                     # Next.js middleware entry — delegates to lib/supabase/middleware.ts
+│   ├── styles/                           # Additional global styles (directory present, currently unused)
 │   └── types/
-│       └── index.ts                # Shared interfaces: User, JobListing, Application, Profile, UserRole
+│       └── index.ts                      # Shared interfaces: User, JobListing, Application, Profile, UserRole
 ├── supabase/
-│   ├── migrations/                 # Sequential SQL migration files
-│   │   ├── 001_initial_schema.sql  # profiles, job_listings, applications, RLS, triggers
-│   │   ├── 002_saved_jobs.sql
-│   │   ├── 003_messages.sql        # conversations, messages, RLS
-│   │   ├── 004_recycle_bin.sql     # deleted_at column on job_listings
-│   │   ├── 005_job_type_and_experience.sql
-│   │   ├── 006_qualifications.sql
-│   │   └── 007_fresh_grad.sql
-│   └── seed/                       # Seed data scripts
+│   ├── migrations/                       # Sequential SQL migration files (hand-authored)
+│   └── seed/                             # Seed data scripts
 ├── tests/
 │   ├── e2e/
 │   ├── integration/
 │   └── unit/
-├── docs/                           # Project documentation
-├── docker-compose.yml              # Local Supabase stack
+├── docs/                                 # Project documentation
+├── .planning/codebase/                   # Codebase analysis documents (this file)
+├── docker-compose.yml                    # Local Supabase stack
 ├── Dockerfile
-├── next.config.mjs                 # Minimal Next.js config (no customizations)
+├── next.config.mjs                       # Minimal Next.js config (no customizations)
 ├── tailwind.config.ts
-├── tsconfig.json
-└── vercel.json                     # Vercel cron schedule (weekly purge job)
+├── tsconfig.json                         # @/ alias maps to ./src/
+└── vercel.json                           # Vercel cron schedule (weekly purge job)
 ```
 
 ## Directory Purposes
 
 **`src/app/(auth)/`:**
 - Purpose: Login, signup, and password reset pages
-- Contains: Server page shells that render Client Component forms
-- Key files: `login/page.tsx`, `signup/page.tsx`, `reset-password/page.tsx`
-- Note: Route group — these URLs are `/login`, `/signup`, `/reset-password` (no `(auth)` in path)
+- Contains: Thin server page shells that render Client Component forms
+- Key files: `login/page.tsx`, `signup/page.tsx`, `reset-password/page.tsx`, `reset-password/update/page.tsx`
+- Note: Route group — URLs are `/login`, `/signup`, `/reset-password` (no `(auth)` prefix in URL)
 
 **`src/app/(dashboard)/`:**
-- Purpose: All authenticated user pages with shared Sidebar layout
-- Contains: Layout with auth guard + role resolution, and pages for applications, profile, saved jobs, recycle bin
-- Key files: `layout.tsx` (critical — fetches role, renders Sidebar), `dashboard/page.tsx`
-- Note: Route group — URLs are `/dashboard`, `/applications`, etc. (no `(dashboard)` in path)
+- Purpose: All authenticated user pages sharing the Sidebar layout
+- Contains: `layout.tsx` with auth guard + role resolution; pages for dashboard, applications, profile, saved jobs, recycle bin
+- Key files: `layout.tsx` (critical — performs auth check, fetches profile, renders Sidebar), `dashboard/page.tsx`
+- Note: Route group — URLs are `/dashboard`, `/applications`, `/profile`, etc.
 
 **`src/app/jobs/`:**
-- Purpose: Public job browsing, job detail, and employer job management
-- Contains: Listing search page, detail page, post/edit pages, applicant review
-- Key files: `page.tsx` (search), `[id]/page.tsx` (detail), `post/page.tsx`, `[id]/edit/page.tsx`
+- Purpose: Public job browsing plus employer job management (outside the dashboard group)
+- Contains: Listing/search page, detail page, post page, edit page, applicant review page
+- Key files: `page.tsx` (search + filter), `[id]/page.tsx` (detail with owner/applicant branching), `post/page.tsx`, `[id]/edit/page.tsx`, `[id]/applications/page.tsx`
+
+**`src/app/messages/`:**
+- Purpose: Messaging between employers and applicants (outside the dashboard group)
+- Contains: Conversation list, individual message thread
+- Key files: `page.tsx`, `[id]/page.tsx`
 
 **`src/app/api/`:**
-- Purpose: API route handlers for OAuth callback, REST endpoint, and cron
-- Contains: Only `route.ts` files — no subdirectory index files
+- Purpose: API route handlers — OAuth callback, REST endpoint, background cron
+- Contains: Only `route.ts` files; no page-level files
 - Key files: `auth/callback/route.ts`, `jobs/route.ts`, `cron/purge-deleted-jobs/route.ts`
 
-**`src/components/`:**
-- Purpose: All React components, grouped by feature domain
-- Pattern: Feature folder (e.g., `jobs/`) contains related components; `layout/` contains shell components; `ui/` for generics
-- Key files: `layout/Navbar.tsx`, `layout/Sidebar.tsx`, `jobs/PostJobForm.tsx`, `auth/LoginForm.tsx`
+**`src/components/auth/`:**
+- Purpose: All authentication form components (all `'use client'`)
+- Key files: `LoginForm.tsx`, `SignupForm.tsx`, `ResetPasswordForm.tsx`, `UpdatePasswordForm.tsx`
+
+**`src/components/dashboard/`:**
+- Purpose: Role-specific dashboard views rendered by `dashboard/page.tsx`
+- Key files: `JobSeekerDashboard.tsx`, `EmployerDashboard.tsx`, `RecycleBin.tsx`
+
+**`src/components/jobs/`:**
+- Purpose: All job-related interactive components (most are `'use client'`)
+- Key files: `PostJobForm.tsx`, `EditJobForm.tsx`, `ApplyButton.tsx`, `SaveJobButton.tsx`, `UnsaveButton.tsx`, `SearchBar.tsx`, `StatusUpdater.tsx`, `EmployerJobActions.tsx`
+
+**`src/components/layout/`:**
+- Purpose: Shell components that appear on every or most pages
+- Key files: `Navbar.tsx` (async Server Component — fetches user), `NavbarUserMenu.tsx` (Client Component dropdown), `Sidebar.tsx` (Client Component — role-based nav + sign out), `Footer.tsx`
+
+**`src/components/messages/`:**
+- Purpose: Messaging UI components
+- Key files: `MessageThread.tsx`, `StartConversationButton.tsx`
 
 **`src/lib/supabase/`:**
-- Purpose: Supabase client instantiation — three separate entry points for three contexts
-- `client.ts` — browser/client components
-- `server.ts` — server components and API routes
-- `middleware.ts` — Next.js middleware only
+- Purpose: Supabase client instantiation — three separate entry points for three execution contexts
+- `client.ts` — use in Client Components (browser)
+- `server.ts` — use in Server Components and Route Handlers
+- `middleware.ts` — use only in `src/middleware.ts`
 
 **`src/lib/validations/`:**
 - Purpose: Zod schemas for form and API input validation
-- Key files: `auth.ts` (login/signup/reset schemas), `job.ts` (job posting schema)
+- Key files: `auth.ts` (exports `loginSchema`, `signupSchema`, `resetPasswordSchema`), `job.ts` (exports `jobSchema`, `JobFormData`)
 
 **`src/lib/utils/index.ts`:**
 - Purpose: Shared pure utility functions
-- Exports: `cn()` (Tailwind class merging), `formatSalary()`, `formatDate()`, `slugify()`
+- Exports: `cn()` (Tailwind class merging via clsx + tailwind-merge), `formatSalary(min, max)`, `formatDate(isoString)`, `slugify(text)`
 
 **`src/types/index.ts`:**
-- Purpose: Single file for all shared TypeScript types
-- Exports: `User`, `JobListing`, `Application`, `Profile`, `UserRole`
+- Purpose: Single barrel file for all shared TypeScript types
+- Exports: `UserRole`, `User`, `JobListing`, `Application`, `Profile`
 
 **`supabase/migrations/`:**
-- Purpose: Versioned SQL files applied to the Supabase database in order
+- Purpose: Versioned SQL files applied to the Supabase database in numeric order
+- Pattern: `00N_description.sql` (e.g., `001_initial_schema.sql`, `007_fresh_grad.sql`)
 - Generated: No — hand-authored
 - Committed: Yes
 
 ## Key File Locations
 
 **Entry Points:**
-- `src/app/layout.tsx`: Root HTML shell, global fonts, Navbar + Footer
-- `src/app/page.tsx`: Homepage — hero, categories, recent listings
-- `src/middleware.ts`: Request interceptor — session refresh + route protection
+- `src/app/layout.tsx` — Root HTML shell, global fonts (Geist), Navbar + Footer
+- `src/app/page.tsx` — Homepage: hero, category browse, 5 most recent listings
+- `src/middleware.ts` — Request interceptor: session refresh + route protection
+- `src/app/(dashboard)/layout.tsx` — Dashboard shell: auth guard, role resolution, Sidebar
 
 **Configuration:**
-- `tsconfig.json`: TypeScript config — `@/` alias maps to `./src/`
-- `tailwind.config.ts`: Tailwind config
-- `vercel.json`: Cron schedule for `purge-deleted-jobs`
-- `docker-compose.yml`: Local Supabase instance
+- `tsconfig.json` — TypeScript config; `@/` alias maps to `./src/`
+- `tailwind.config.ts` — Tailwind configuration
+- `vercel.json` — Cron schedule: `0 0 * * 0` (weekly) for `purge-deleted-jobs`
+- `docker-compose.yml` — Local Supabase instance for development
+- `next.config.mjs` — Minimal; no custom Next.js configuration
 
-**Core Logic:**
-- `src/lib/supabase/middleware.ts`: Protected path list and redirect logic
-- `src/app/(dashboard)/layout.tsx`: Role resolution for the entire dashboard section
-- `src/app/(dashboard)/dashboard/page.tsx`: Role-branching dashboard — renders different component trees for jobseekers vs employers
+**Core Business Logic:**
+- `src/lib/supabase/middleware.ts` — Protected path list; session refresh and redirect logic
+- `src/app/(dashboard)/dashboard/page.tsx` — Role branch: renders `JobSeekerDashboard` or `EmployerDashboard`
+- `src/app/jobs/[id]/page.tsx` — Owner vs applicant branching; soft-delete visibility logic
+- `src/app/api/cron/purge-deleted-jobs/route.ts` — Hard-deletes soft-deleted jobs older than 7 days
 
-**Database:**
-- `supabase/migrations/001_initial_schema.sql`: Canonical schema for all core tables and RLS policies
+**Database Schema:**
+- `supabase/migrations/001_initial_schema.sql` — Core tables: `profiles`, `job_listings`, `applications`, RLS policies, `handle_new_user` trigger
+- `supabase/migrations/002_saved_jobs.sql` — `saved_jobs` table
+- `supabase/migrations/003_messages.sql` — `conversations`, `messages` tables
+- `supabase/migrations/004_recycle_bin.sql` — `deleted_at` column on `job_listings`
 
 ## Naming Conventions
 
 **Files:**
-- Pages: `page.tsx` (all lowercase, required by Next.js App Router)
-- Layouts: `layout.tsx`
-- API routes: `route.ts`
-- Components: PascalCase `.tsx` (e.g., `LoginForm.tsx`, `SaveJobButton.tsx`)
-- Hooks: camelCase prefixed with `use` (e.g., `useUser.ts`, `useSupabase.ts`)
-- Lib modules: camelCase (e.g., `client.ts`, `server.ts`)
-- Validation schemas: camelCase noun (e.g., `job.ts`, `auth.ts`)
+- Next.js reserved files: `page.tsx`, `layout.tsx`, `route.ts` (always lowercase)
+- Components: PascalCase `.tsx` — e.g., `LoginForm.tsx`, `SaveJobButton.tsx`, `NavbarUserMenu.tsx`
+- Hooks: camelCase prefixed with `use` — e.g., `useUser.ts`, `useSupabase.ts`
+- Lib modules: camelCase — e.g., `client.ts`, `server.ts`, `middleware.ts`
+- Validation files: singular noun — e.g., `job.ts`, `auth.ts`
+- Type files: singular — `index.ts` barrel
 
 **Directories:**
-- App route segments: lowercase with hyphens (e.g., `reset-password/`, `purge-deleted-jobs/`)
-- Route groups: lowercase with parentheses (e.g., `(auth)/`, `(dashboard)/`)
-- Component folders: lowercase, feature-named (e.g., `jobs/`, `dashboard/`, `layout/`)
-- Dynamic segments: bracket notation (e.g., `[id]/`)
+- App route segments: lowercase, hyphens for multi-word — e.g., `reset-password/`, `purge-deleted-jobs/`
+- Route groups: lowercase with parentheses — `(auth)/`, `(dashboard)/`
+- Component folders: lowercase, feature-named — e.g., `jobs/`, `dashboard/`, `layout/`
+- Dynamic segments: bracket notation — `[id]/`
 
 **Database:**
-- Tables: `snake_case` plural (e.g., `job_listings`, `saved_jobs`, `conversations`)
+- Tables: `snake_case` plural — e.g., `job_listings`, `saved_jobs`, `conversations`
 - Columns: `snake_case`
-- Enum values: `snake_case` strings (e.g., `full_time`, `fresh_grad_plus`)
+- Enum-like string values: `snake_case` — e.g., `full_time`, `fresh_grad_plus`, `jobseeker`
 
 ## Where to Add New Code
 
-**New Page (authenticated):**
-- Add `page.tsx` under `src/app/(dashboard)/[feature]/`
+**New authenticated page:**
+- Create `src/app/(dashboard)/[feature]/page.tsx`
 - The `(dashboard)/layout.tsx` automatically wraps it with auth + Sidebar
-- Add corresponding nav item to `JOBSEEKER_NAV` or `EMPLOYER_NAV` in `src/components/layout/Sidebar.tsx`
-- Add path to the protected paths list in `src/lib/supabase/middleware.ts` if not already covered
+- Add a nav item to `JOBSEEKER_NAV` or `EMPLOYER_NAV` in `src/components/layout/Sidebar.tsx`
+- Verify the path is covered by the protected paths list in `src/lib/supabase/middleware.ts`
 
-**New Page (public):**
-- Add `page.tsx` under `src/app/[feature]/`
-- No auth wrapper — page is publicly accessible
+**New public page:**
+- Create `src/app/[feature]/page.tsx`
+- No auth wrapper; page is publicly accessible by default
 
-**New API Route:**
-- Add `route.ts` under `src/app/api/[feature]/`
+**New API route:**
+- Create `src/app/api/[feature]/route.ts`
 - Import server client from `src/lib/supabase/server.ts`
-- Return `NextResponse.json()` for all responses
+- Return `NextResponse.json()` for all responses; check auth via `supabase.auth.getUser()`
 
-**New Component:**
-- Place in the matching feature folder under `src/components/[feature]/`
-- Use `'use client'` directive only if the component uses hooks, event handlers, or browser APIs
-- Server Components (no directive): fetch data directly via `createClient()` from `src/lib/supabase/server.ts`
-- Client Components: use `useSupabase()` hook or `createClient()` from `src/lib/supabase/client.ts`
+**New component:**
+- Place in `src/components/[feature]/ComponentName.tsx`
+- Add `'use client'` only if the component uses `useState`, `useEffect`, event handlers, or browser APIs
+- Server Components: call `createClient()` from `src/lib/supabase/server.ts` directly
+- Client Components: import `createClient` from `src/lib/supabase/client.ts` or use `useSupabase()` hook
 
-**New Validation Schema:**
+**New validation schema:**
 - Add to `src/lib/validations/[feature].ts`
-- Export the schema and infer the type with `z.infer<typeof schema>`
+- Export both the schema and its inferred type: `export type XFormData = z.infer<typeof xSchema>`
 
-**New Shared Type:**
-- Add to `src/types/index.ts`
+**New shared type:**
+- Add interface or type to `src/types/index.ts`
 
-**New Utility Function:**
-- Add to `src/lib/utils/index.ts`
+**New utility function:**
+- Add to `src/lib/utils/index.ts` as a named export
 
-**New Database Table:**
-- Create `supabase/migrations/00N_description.sql`
-- Include RLS policies in the same file
+**New database table:**
+- Create `supabase/migrations/00N_description.sql` (increment N)
+- Include RLS policies in the same migration file
 - Add corresponding TypeScript interface to `src/types/index.ts`
 
 ## Special Directories
 
-**`.planning/`:**
-- Purpose: Planning and analysis documents for the project
-- Generated: No — hand-authored by planning agents
+**`.planning/codebase/`:**
+- Purpose: Codebase analysis documents consumed by planning and execution agents
+- Generated: No — produced by mapping agents
 - Committed: Yes
 
 **`.next/`:**
-- Purpose: Next.js build output and dev cache
+- Purpose: Next.js build output and dev server cache
 - Generated: Yes — by `next build` / `next dev`
 - Committed: No
 

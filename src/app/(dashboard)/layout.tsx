@@ -25,7 +25,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-[calc(100vh-64px)]">
       <Sidebar role={role} fullName={fullName} />
-      <main className="flex-1 bg-gray-50 p-6 lg:p-8 overflow-y-auto">
+      <main className="flex-1 bg-[#faf6ef] p-6 lg:p-8 overflow-y-auto">
         {children}
       </main>
     </div>
