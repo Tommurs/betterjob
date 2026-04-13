@@ -6,19 +6,21 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 const JOBSEEKER_NAV = [
-  { label: 'Browse Jobs',      href: '/jobs',                 icon: '🔍' },
-  { label: 'My Applications',  href: '/applications',         icon: '📋' },
-  { label: 'Messages',         href: '/messages',             icon: '✉️' },
-  { label: 'Saved Jobs',       href: '/saved',                icon: '🔖' },
-  { label: 'Profile',          href: '/profile',              icon: '👤' },
+  { label: 'Browse Jobs',     href: '/jobs' },
+  { label: 'My Applications', href: '/applications' },
+  { label: 'Messages',        href: '/messages' },
+  { label: 'Saved Jobs',      href: '/saved' },
+  { label: 'Profile',         href: '/profile' },
+  { label: 'Settings',        href: '/settings' },
 ]
 
 const EMPLOYER_NAV = [
-  { label: 'Posted Jobs',      href: '/dashboard',            icon: '📌' },
-  { label: 'Post a Job',       href: '/jobs/post',            icon: '➕' },
-  { label: 'Messages',         href: '/messages',             icon: '✉️' },
-  { label: 'Profile',          href: '/profile',              icon: '🏢' },
-  { label: 'Recycle Bin',      href: '/recyclebin',           icon: '🗑' },
+  { label: 'Posted Jobs',  href: '/dashboard' },
+  { label: 'Post a Job',   href: '/jobs/post' },
+  { label: 'Messages',     href: '/messages' },
+  { label: 'Profile',      href: '/profile' },
+  { label: 'Recycle Bin',  href: '/recyclebin' },
+  { label: 'Settings',     href: '/settings' },
 ]
 
 interface SidebarProps {
@@ -39,32 +41,39 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
     router.refresh()
   }
 
+  const initials = fullName
+    .split(' ')
+    .map(n => n[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
+
   return (
-    <aside className="w-64 shrink-0 bg-white border-r border-gray-200 flex flex-col">
+    <aside className="w-60 shrink-0 bg-white border-r border-slate-200/80 flex flex-col">
       {/* User info */}
-      <div className="px-5 py-5 border-b border-gray-100">
-        <div className="w-9 h-9 rounded-full bg-blue-600 text-white text-sm font-semibold flex items-center justify-center mb-3">
-          {fullName.charAt(0).toUpperCase()}
+      <div className="px-5 py-5 border-b border-slate-100">
+        <div className="w-9 h-9 rounded-full bg-[#0f2d1f] text-white text-sm font-bold
+                        flex items-center justify-center mb-3">
+          {initials}
         </div>
-        <p className="text-sm font-semibold text-gray-900 truncate">{fullName}</p>
-        <p className="text-xs text-gray-400 capitalize mt-0.5">{role}</p>
+        <p className="text-sm font-semibold text-slate-900 truncate">{fullName}</p>
+        <p className="text-xs text-slate-400 capitalize mt-0.5">{role?.replace('_', ' ')}</p>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-0.5">
         {navItems.map(item => {
           const isActive = pathname === item.href
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-[#0f2d1f] text-white'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
-              <span className="text-base">{item.icon}</span>
               {item.label}
             </Link>
           )
@@ -72,12 +81,12 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
       </nav>
 
       {/* Sign out */}
-      <div className="px-3 py-4 border-t border-gray-100">
+      <div className="px-3 py-4 border-t border-slate-100">
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium
+                     text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
         >
-          <span className="text-base">🚪</span>
           Sign out
         </button>
       </div>

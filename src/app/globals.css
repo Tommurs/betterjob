@@ -3,30 +3,38 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #111827;
+  --brand:         #0f2d1f;
+  --brand-mid:     #166534;
+  --brand-light:   #f0fdf4;
+  --accent:        #f59e0b;
+  --accent-dark:   #d97706;
+  --accent-light:  #fefce8;
+  --bg:            #f8fafc;
+  --surface:       #ffffff;
+  --ink:           #0f172a;
+  --ink-muted:     #64748b;
+  --ink-faint:     #94a3b8;
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--ink);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Better focus rings globally */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Remove default focus outline in favour of focus-visible */
 *:focus:not(:focus-visible) {
   outline: none;
 }
@@ -35,39 +43,62 @@ html {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hero — deep green with radial glow */
+  .hero-pattern {
+    background-color: #081a10;
+    background-image:
+      radial-gradient(ellipse 100% 80% at 50% -5%, rgba(22, 163, 74, 0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 50% at 85% 90%, rgba(245, 158, 11, 0.1) 0%, transparent 55%);
+  }
 }
 
-/* Custom select arrow — positions the chevron 10px from the right edge */
+/* Custom select arrow */
 select {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 2rem;
 }
 
 @layer components {
-  /* Reusable card style */
   .card {
-    @apply bg-white border border-gray-200 rounded-xl shadow-sm;
+    @apply bg-white border border-slate-200/80 rounded-2xl
+           shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.05)];
   }
 
-  /* Reusable input style */
+  .card-hover {
+    @apply hover:shadow-[0_4px_8px_rgba(0,0,0,0.06),0_12px_32px_rgba(15,45,31,0.10)]
+           hover:border-emerald-200/60 hover:-translate-y-0.5
+           transition-all duration-200 cursor-pointer;
+  }
+
   .input {
-    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none
-           focus:ring-2 focus:ring-blue-500 focus:border-transparent transition;
+    @apply w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none
+           bg-white text-slate-800
+           focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500
+           transition placeholder:text-slate-400;
   }
 
-  /* Primary button */
   .btn-primary {
-    @apply bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg
-           hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-[#0f2d1f] text-white text-sm font-semibold px-5 py-2.5 rounded-xl
+           hover:bg-[#166534] active:scale-[0.98]
+           transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  /* Secondary button */
+  .btn-accent {
+    @apply bg-[#f59e0b] text-white text-sm font-semibold px-5 py-2.5 rounded-xl
+           hover:bg-[#d97706] active:scale-[0.98]
+           transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
   .btn-secondary {
-    @apply border border-gray-300 text-gray-700 text-sm font-medium px-5 py-2.5 rounded-lg
-           hover:border-blue-400 hover:text-blue-600 transition-colors;
+    @apply border border-slate-200 text-slate-600 text-sm font-medium px-5 py-2.5 rounded-xl
+           hover:border-slate-300 hover:bg-slate-50
+           active:scale-[0.98] transition-all duration-150;
   }
 }
