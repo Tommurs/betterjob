@@ -154,6 +154,7 @@ export default async function JobsPage({ searchParams }: Props) {
             {jobs?.length ?? 0} listing{jobs?.length !== 1 ? 's' : ''}
             {q && <span> for <strong className="text-[#1c1612]">&quot;{q}&quot;</strong></span>}
             {location && <span> in <strong className="text-[#1c1612]">{location}</strong></span>}
+            {sector && <span> · <strong className="text-[#1c1612]">{sector}</strong></span>}
           </p>
         </div>
         {hasFilters && (
