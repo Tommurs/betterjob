@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import JobParser, { type ParsedJob } from '@/components/jobs/JobParser'
 
 const JOB_TYPES = [
   { value: 'full_time',  label: 'Full-time' },
@@ -62,6 +61,7 @@ interface Job {
   preferred_degree?: string | null
   preferred_qualifications?: string[]
   fresh_grad_policy?: string | null
+  messaging_enabled?: boolean
 }
 
 interface Props {
@@ -90,6 +90,7 @@ export default function EditJobForm({ job }: Props) {
   const [freshGradPolicy, setFreshGradPolicy]     = useState<'no' | 'fresh_grad' | 'fresh_grad_plus'>(
     (job.fresh_grad_policy as 'fresh_grad' | 'fresh_grad_plus') ?? 'no'
   )
+  const [messagingEnabled, setMessagingEnabled]   = useState(job.messaging_enabled ?? false)
   const [submitError, setSubmitError]             = useState('')
   const [loading, setLoading]                     = useState(false)
 
@@ -179,6 +180,7 @@ export default function EditJobForm({ job }: Props) {
         preferred_degree: preferredDegree || null,
         preferred_qualifications: preferredQuals,
         fresh_grad_policy: freshGradPolicy === 'no' ? null : freshGradPolicy,
+        messaging_enabled: messagingEnabled,
       })
       .eq('id', job.id)
 
@@ -266,7 +268,7 @@ export default function EditJobForm({ job }: Props) {
           {JOB_TYPES.map(t => (
             <button key={t.value} type="button" onClick={() => setType(t.value)}
               className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                type === t.value ? 'bg-[#0f2d1f] text-white border-blue-600' : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-blue-400'
+                type === t.value ? 'bg-[#0f2d1f] text-white border-[#0f2d1f]' : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-[#a7f3d0]'
               }`}>
               {t.label}
             </button>
@@ -336,8 +338,8 @@ export default function EditJobForm({ job }: Props) {
               onClick={() => setFreshGradPolicy(opt.value)}
               className={`py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
                 freshGradPolicy === opt.value
-                  ? 'bg-teal-600 text-white border-teal-600'
-                  : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-teal-400'
+                  ? 'bg-[#d1fae5] text-[#065f46] border-[#a7f3d0]'
+                  : 'bg-white text-gray-600 border-[#e5d8c8] hover:border-[#a7f3d0]'
               }`}
             >
               {opt.label}
@@ -349,6 +351,27 @@ export default function EditJobForm({ job }: Props) {
           {freshGradPolicy === 'fresh_grad_plus' && 'Listing will show a "Fresh Grad + Experience" tag — open to fresh grads with some relevant background.'}
           {freshGradPolicy === 'no'              && 'No fresh graduate tag will be shown on the listing.'}
         </p>
+      </div>
+
+      {/* Applicant messaging */}
+      <div className="flex items-start justify-between gap-4 bg-[#faf6ef] border border-[#e5d8c8] rounded-xl px-4 py-3.5">
+        <div>
+          <p className="text-sm font-medium text-[#1c1612]">Allow applicants to message you</p>
+          <p className="text-xs text-[#78716c] mt-0.5">Applicants who have applied can send you a message about this role</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setMessagingEnabled(v => !v)}
+          className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none ${
+            messagingEnabled ? 'bg-[#0f2d1f]' : 'bg-[#d6cdc4]'
+          }`}
+          role="switch"
+          aria-checked={messagingEnabled}
+        >
+          <span className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+            messagingEnabled ? 'translate-x-5' : 'translate-x-0'
+          }`} />
+        </button>
       </div>
 
       {/* Description */}

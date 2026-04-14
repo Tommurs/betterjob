@@ -11,11 +11,11 @@ interface Props {
   avatarUrl?: string | null
 }
 
-const MENU_ITEMS = [
+const MENU_ITEMS: { label: string; href: string; badge?: string }[] = [
   { label: 'Dashboard',  href: '/dashboard' },
   { label: 'Profile',    href: '/profile' },
   { label: 'Messages',   href: '/messages' },
-  { label: 'Settings',   href: '/settings', badge: 'Soon' },
+  { label: 'Settings',   href: '/settings' },
 ]
 
 export default function NavbarUserMenu({ fullName, role, avatarUrl }: Props) {
