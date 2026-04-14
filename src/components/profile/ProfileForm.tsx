@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { SECTORS } from '@/lib/constants/sectors'
 
 interface Profile {
   id: string
@@ -14,6 +15,7 @@ interface Profile {
   linkedin_url?: string
   github_url?: string
   skills?: string[]
+  sector?: string | null
 }
 
 interface Props {
@@ -31,6 +33,7 @@ export default function ProfileForm({ profile }: Props) {
   const [website, setWebsite] = useState(profile?.website ?? '')
   const [linkedin, setLinkedin] = useState(profile?.linkedin_url ?? '')
   const [github, setGithub] = useState(profile?.github_url ?? '')
+  const [sector, setSector] = useState(profile?.sector ?? '')
   const [skillInput, setSkillInput] = useState('')
   const [skills, setSkills] = useState<string[]>(profile?.skills ?? [])
   const [loading, setLoading] = useState(false)
@@ -73,6 +76,7 @@ export default function ProfileForm({ profile }: Props) {
         linkedin_url: linkedin,
         github_url: github,
         skills,
+        sector: sector || null,
       })
       .eq('id', profile?.id)
 
@@ -131,6 +135,26 @@ export default function ProfileForm({ profile }: Props) {
           className="input"
         />
       </div>
+
+      {/* Sector — employers only */}
+      {isEmployer && (
+        <div>
+          <label className="block text-sm font-medium text-[#1c1612] mb-1">
+            Industry / Sector
+            <span className="text-[#a8a29e] font-normal ml-1">(optional)</span>
+          </label>
+          <select
+            value={sector}
+            onChange={e => setSector(e.target.value)}
+            className="input bg-white"
+          >
+            <option value="">Select a sector…</option>
+            {SECTORS.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Bio */}
       <div>
