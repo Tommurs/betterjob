@@ -13,7 +13,7 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name, role, notification_preferences, profile_visibility, open_to_work, invite_to_apply, job_search_status, job_preferences')
+    .select('full_name, role, notification_preferences, searchable, open_to_work, invite_to_apply, job_search_status, job_preferences')
     .eq('id', user.id)
     .single()
 
@@ -83,7 +83,7 @@ export default async function SettingsPage() {
           <PrivacyForm
             userId={user.id}
             role={role}
-            profileVisibility={profile?.profile_visibility ?? 'public'}
+            searchable={profile?.searchable ?? true}
             openToWork={profile?.open_to_work ?? false}
             inviteToApply={profile?.invite_to_apply ?? true}
             jobSearchStatus={profile?.job_search_status ?? 'open'}
