@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
+import MessageHiringManagerButton from '@/components/messages/MessageHiringManagerButton'
 
 const STATUS_STYLES: Record<string, string> = {
   pending:     'bg-[#f2ebe0] text-[#78716c]',
@@ -30,7 +31,7 @@ export default async function ApplicationsPage() {
     .select(`
       id, status, created_at,
       job_listings (
-        id, title, company, location, type
+        id, title, company, location, type, employer_id, messaging_enabled
       )
     `)
     .eq('applicant_id', user.id)
@@ -79,10 +80,17 @@ export default async function ApplicationsPage() {
                 </div>
 
                 {/* Right */}
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-3 shrink-0 flex-wrap">
                   <span className={`text-xs px-3 py-1 rounded-full font-medium ${STATUS_STYLES[app.status]}`}>
                     {STATUS_LABELS[app.status]}
                   </span>
+                  {job?.messaging_enabled && job?.employer_id && (
+                    <MessageHiringManagerButton
+                      jobId={job.id}
+                      employerId={job.employer_id}
+                      applicantId={user.id}
+                    />
+                  )}
                   <Link
                     href={`/jobs/${job?.id}`}
                     className="text-sm border border-[#e5d8c8] text-[#78716c] px-4 py-1.5 rounded-xl

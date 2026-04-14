@@ -30,7 +30,7 @@ export default async function JobApplicationsPage({ params }: { params: { id: st
   // Confirm this job belongs to the logged-in employer
   const { data: job } = await supabase
     .from('job_listings')
-    .select('id, title, company, location, type')
+    .select('id, title, company, location, type, messaging_enabled')
     .eq('id', params.id)
     .eq('employer_id', user.id)
     .single()
@@ -63,9 +63,17 @@ export default async function JobApplicationsPage({ params }: { params: { id: st
           <h1 className="heading-display text-xl font-bold text-[#1c1612] mt-2">{job.title}</h1>
           <p className="text-sm text-[#78716c]">{job.company} · {job.location}</p>
         </div>
-        <div className="text-right shrink-0">
+        <div className="text-right shrink-0 space-y-1">
           <p className="heading-display text-2xl font-bold text-[#0f2d1f]">{total}</p>
           <p className="text-xs text-[#a8a29e]">applicant{total !== 1 ? 's' : ''}</p>
+          <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium ${
+            job.messaging_enabled
+              ? 'bg-[#d1fae5] text-[#065f46]'
+              : 'bg-[#f2ebe0] text-[#78716c]'
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${job.messaging_enabled ? 'bg-[#065f46]' : 'bg-[#a8a29e]'}`} />
+            {job.messaging_enabled ? 'Messaging on' : 'Messaging off'}
+          </span>
         </div>
       </div>
 

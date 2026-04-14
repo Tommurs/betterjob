@@ -5,6 +5,7 @@ import { formatSalary, formatDate } from '@/lib/utils'
 import ApplyButton from '@/components/jobs/ApplyButton'
 import SaveJobButton from '@/components/jobs/SaveJobButton'
 import EmployerJobActions from '@/components/jobs/EmployerJobActions'
+import MessageHiringManagerButton from '@/components/messages/MessageHiringManagerButton'
 
 const FRESH_GRAD_BADGE: Record<string, { label: string; cls: string }> = {
   fresh_grad:      { label: 'Fresh Graduate',          cls: 'bg-[#d1fae5] text-[#065f46] ring-1 ring-[#a7f3d0]' },
@@ -309,6 +310,13 @@ export default async function JobDetailPage({ params }: { params: { id: string }
                   isLoggedIn={!!user}
                 />
                 <SaveJobButton jobId={job.id} isSaved={isSaved} isLoggedIn={!!user} />
+                {hasApplied && job.messaging_enabled && user && (
+                  <MessageHiringManagerButton
+                    jobId={job.id}
+                    employerId={job.employer_id}
+                    applicantId={user.id}
+                  />
+                )}
               </div>
             )}
           </div>

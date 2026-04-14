@@ -39,9 +39,11 @@ export default async function ConversationPage({ params }: { params: { id: strin
   )
 
   return (
-    <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col h-[calc(100vh-64px)]">
+    // Account for navbar (64px) + layout padding (p-6 = 24px top+bottom = 48px → 112px total)
+    // At lg, p-8 = 32px top+bottom = 64px → 128px total
+    <div className="flex flex-col h-[calc(100vh-112px)] lg:h-[calc(100vh-128px)]">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-6 shrink-0">
         <Link
           href="/messages"
           className="inline-flex items-center gap-1.5 text-sm text-[#a8a29e] hover:text-[#78716c] transition-colors font-medium shrink-0"
@@ -73,6 +75,6 @@ export default async function ConversationPage({ params }: { params: { id: strin
         messages={messages}
         currentUserId={user.id}
       />
-    </main>
+    </div>
   )
 }
