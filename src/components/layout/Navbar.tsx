@@ -18,10 +18,10 @@ export default async function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-[#fffefb] border-b border-[#e5d8c8] shadow-[0_1px_0_rgba(28,22,18,0.06)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-3 items-center h-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center h-16 gap-3">
 
         {/* Logo — left */}
-        <Link href="/" className="flex items-center gap-2.5 group justify-self-start">
+        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f2d1f] to-[#1a4a32]
                           flex items-center justify-center text-white text-xs font-bold
                           shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-150">
@@ -32,8 +32,11 @@ export default async function Navbar() {
           </span>
         </Link>
 
-        {/* Nav links — center */}
-        <div className="hidden sm:flex items-center justify-center gap-1 text-sm">
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Nav links */}
+        <div className="hidden sm:flex items-center gap-1 text-sm">
           <Link
             href="/jobs"
             className="text-[#78716c] hover:text-[#1c1612] hover:bg-[#e5d8c8]/40 font-medium
@@ -45,15 +48,13 @@ export default async function Navbar() {
 
         {/* Auth — right */}
         {user && profile ? (
-          <div className="flex justify-end">
-            <NavbarUserMenu
-              fullName={profile.full_name}
-              role={profile.role}
-              avatarUrl={profile.avatar_url}
-            />
-          </div>
+          <NavbarUserMenu
+            fullName={profile.full_name}
+            role={profile.role}
+            avatarUrl={profile.avatar_url}
+          />
         ) : (
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center gap-2">
             <Link
               href="/login"
               className="text-sm text-[#0f2d1f] hover:text-[#1c1612] font-semibold
