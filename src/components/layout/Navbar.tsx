@@ -18,7 +18,7 @@ export default async function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-[#fffefb] border-b border-[#e5d8c8] shadow-[0_1px_0_rgba(28,22,18,0.06)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center h-16">
+      <div className="w-full px-4 sm:px-6 flex items-center h-16">
 
         {/* Logo — left third */}
         <div className="flex-1 flex items-center">
