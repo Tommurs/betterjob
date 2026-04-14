@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { SECTORS } from '@/lib/constants/sectors'
 
 const JOB_TYPES = [
   { value: 'full_time',  label: 'Full-time' },
@@ -69,6 +70,7 @@ export default function PostJobForm({ companyName }: Props) {
   const [preferredDegree, setPreferredDegree]     = useState('')
   const [preferredInput, setPreferredInput]       = useState('')
   const [preferredQuals, setPreferredQuals]       = useState<string[]>([])
+  const [sector, setSector]                       = useState('')
   const [messagingEnabled, setMessagingEnabled]   = useState(false)
   const [submitError, setSubmitError]             = useState('')
   const [loading, setLoading]                     = useState(false)
@@ -167,6 +169,7 @@ export default function PostJobForm({ companyName }: Props) {
         preferred_qualifications: preferredQuals,
         fresh_grad_policy: freshGradPolicy === 'no' ? null : freshGradPolicy,
         messaging_enabled: messagingEnabled,
+        sector: sector || null,
         is_active: true,
         employer_id: user.id,
       })
@@ -266,6 +269,27 @@ export default function PostJobForm({ companyName }: Props) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Sector */}
+      <div>
+        <label className="block text-sm font-medium text-[#1c1612] mb-1">
+          Industry / Sector
+          <span className="text-[#a8a29e] font-normal ml-1">(optional)</span>
+        </label>
+        <select
+          value={sector}
+          onChange={e => setSector(e.target.value)}
+          className="input bg-white"
+        >
+          <option value="">Select a sector…</option>
+          {SECTORS.map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+        <p className="text-xs text-[#a8a29e] mt-1">
+          This can differ from your company sector — useful for recruiting firms posting on behalf of a client.
+        </p>
       </div>
 
       {/* Salary */}
