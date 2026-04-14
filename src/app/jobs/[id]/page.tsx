@@ -144,6 +144,11 @@ export default async function JobDetailPage({ params }: { params: { id: string }
                       {FRESH_GRAD_BADGE[job.fresh_grad_policy].label}
                     </span>
                   )}
+                  {job.sector && (
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-[#f2ebe0] text-[#78716c] ring-1 ring-[#e5d8c8]">
+                      {job.sector}
+                    </span>
+                  )}
                   {!job.is_active && (
                     <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-[#f2ebe0] text-[#78716c]">
                       Closed
