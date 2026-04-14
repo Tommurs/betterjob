@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import ProfileForm from '@/components/profile/ProfileForm'
+import WorkExperienceForm from '@/components/profile/WorkExperienceForm'
 
 export default async function ProfilePage() {
   const supabase = createClient()
@@ -8,11 +9,16 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  const [{ data: profile }, { data: experience }] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', user.id).single(),
+    supabase
+      .from('work_experience')
+      .select('*')
+      .eq('profile_id', user.id)
+      .order('start_date', { ascending: false }),
+  ])
+
+  const isJobseeker = profile?.role !== 'employer'
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -24,7 +30,15 @@ export default async function ProfilePage() {
             : 'This information is shown to employers when you apply'}
         </p>
       </div>
+
       <ProfileForm profile={profile} />
+
+      {isJobseeker && (
+        <div className="bg-[#fffefb] border border-[#e5d8c8] rounded-2xl p-6
+                        shadow-[0_1px_3px_rgba(28,22,18,0.05),0_4px_16px_rgba(28,22,18,0.06)]">
+          <WorkExperienceForm profileId={user.id} initialExperience={experience ?? []} />
+        </div>
+      )}
     </div>
   )
 }
