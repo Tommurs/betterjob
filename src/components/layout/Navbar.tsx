@@ -18,24 +18,23 @@ export default async function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-[#fffefb] border-b border-[#e5d8c8] shadow-[0_1px_0_rgba(28,22,18,0.06)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center h-16 gap-3">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center h-16">
 
-        {/* Logo — left */}
-        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f2d1f] to-[#1a4a32]
-                          flex items-center justify-center text-white text-xs font-bold
-                          shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-150">
-            B
-          </div>
-          <span className="heading-display font-bold text-[#0f2d1f] tracking-tight text-[15px]">
-            BetterJob
-          </span>
-        </Link>
+        {/* Logo — left third */}
+        <div className="flex-1 flex items-center">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f2d1f] to-[#1a4a32]
+                            flex items-center justify-center text-white text-xs font-bold
+                            shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-150">
+              B
+            </div>
+            <span className="heading-display font-bold text-[#0f2d1f] tracking-tight text-[15px]">
+              BetterJob
+            </span>
+          </Link>
+        </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Nav links */}
+        {/* Nav links — center */}
         <div className="hidden sm:flex items-center gap-1 text-sm">
           <Link
             href="/jobs"
@@ -46,31 +45,33 @@ export default async function Navbar() {
           </Link>
         </div>
 
-        {/* Auth — right */}
-        {user && profile ? (
-          <NavbarUserMenu
-            fullName={profile.full_name}
-            role={profile.role}
-            avatarUrl={profile.avatar_url}
-          />
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="text-sm text-[#0f2d1f] hover:text-[#1c1612] font-semibold
-                         transition-colors px-3 py-1.5 rounded-lg hover:bg-[#e5d8c8]/40"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/signup"
-              className="btn-primary text-sm px-4 py-2 rounded-xl
-                         shadow-sm hover:shadow-md active:scale-[0.98]"
-            >
-              Get started
-            </Link>
-          </div>
-        )}
+        {/* Auth — right third */}
+        <div className="flex-1 flex items-center justify-end">
+          {user && profile ? (
+            <NavbarUserMenu
+              fullName={profile.full_name}
+              role={profile.role}
+              avatarUrl={profile.avatar_url}
+            />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="text-sm text-[#0f2d1f] hover:text-[#1c1612] font-semibold
+                           transition-colors px-3 py-1.5 rounded-lg hover:bg-[#e5d8c8]/40"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="btn-primary text-sm px-4 py-2 rounded-xl
+                           shadow-sm hover:shadow-md active:scale-[0.98]"
+              >
+                Get started
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   )
