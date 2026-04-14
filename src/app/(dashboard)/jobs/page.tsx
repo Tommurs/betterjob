@@ -58,6 +58,7 @@ interface Props {
     q?: string
     location?: string
     type?: string
+    sector?: string
     view?: string
     skill?: string
     jobTitle?: string
@@ -83,7 +84,7 @@ export default async function JobsPage({ searchParams }: Props) {
     }
   }
 
-  const { q, location, type } = searchParams
+  const { q, location, type, sector } = searchParams
 
   let query = supabase
     .from('job_listings')
@@ -95,6 +96,7 @@ export default async function JobsPage({ searchParams }: Props) {
   if (type) query = query.eq('type', type)
   if (q) query = query.or(`title.ilike.%${q}%,company.ilike.%${q}%,description.ilike.%${q}%`)
   if (location) query = query.ilike('location', `%${location}%`)
+  if (sector) query = query.eq('sector', sector)
 
   const [{ data: jobs }] = await Promise.all([
     query,
@@ -109,13 +111,13 @@ export default async function JobsPage({ searchParams }: Props) {
     savedJobIds = new Set(saved?.map(s => s.job_id) ?? [])
   }
 
-  const hasFilters = !!(q || location || type)
+  const hasFilters = !!(q || location || type || sector)
 
   return (
     <div className="space-y-6">
 
       {/* Search */}
-      <SearchBar initialQuery={q} initialLocation={location} />
+      <SearchBar initialQuery={q} initialLocation={location} initialSector={sector} />
 
       {/* Type filter pills */}
       <div className="flex flex-wrap gap-2">
@@ -123,6 +125,7 @@ export default async function JobsPage({ searchParams }: Props) {
           const params = new URLSearchParams()
           if (q) params.set('q', q)
           if (location) params.set('location', location)
+          if (sector) params.set('sector', sector)
           if (f.value) params.set('type', f.value)
           const isActive = (type ?? '') === f.value
           return (
