@@ -39,7 +39,7 @@ export default async function Navbar() {
             className="text-[#78716c] hover:text-[#1c1612] hover:bg-[#e5d8c8]/40 font-medium
                        transition-colors px-3 py-1.5 rounded-lg"
           >
-            Browse Jobs
+            {profile?.role === 'employer' ? 'Browse Candidates' : 'Browse Jobs'}
           </Link>
         </div>
 

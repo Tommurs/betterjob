@@ -15,12 +15,14 @@ const JOBSEEKER_NAV = [
 ]
 
 const EMPLOYER_NAV = [
-  { label: 'Posted Jobs',  href: '/dashboard' },
-  { label: 'Post a Job',   href: '/jobs/post' },
-  { label: 'Messages',     href: '/messages' },
-  { label: 'Profile',      href: '/profile' },
-  { label: 'Recycle Bin',  href: '/recyclebin' },
-  { label: 'Settings',     href: '/settings' },
+  { label: 'Browse Candidates', href: '/jobs' },
+  { label: 'Posted Jobs',       href: '/dashboard' },
+  { label: 'Post a Job',        href: '/jobs/post' },
+  { label: 'Browse Jobs',       href: '/jobs?view=listings' },
+  { label: 'Messages',          href: '/messages' },
+  { label: 'Profile',           href: '/profile' },
+  { label: 'Recycle Bin',       href: '/recyclebin' },
+  { label: 'Settings',          href: '/settings' },
 ]
 
 interface SidebarProps {
