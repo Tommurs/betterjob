@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -32,6 +32,7 @@ interface SidebarProps {
 
 export default function Sidebar({ role, fullName }: SidebarProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const router = useRouter()
   const supabase = createClient()
 
@@ -65,7 +66,12 @@ export default function Sidebar({ role, fullName }: SidebarProps) {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
         {navItems.map(item => {
-          const isActive = pathname === item.href
+          const [itemPath, itemQuery] = item.href.split('?')
+          const currentQuery = searchParams.toString()
+          const isActive = itemPath === pathname &&
+            (itemQuery ? currentQuery === itemQuery : !currentQuery || !navItems.some(
+              n => n.href.includes('?') && n.href.split('?')[0] === pathname
+            ))
           return (
             <Link
               key={item.href}
